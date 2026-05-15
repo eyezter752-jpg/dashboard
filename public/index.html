@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<title>Доктор Оптика — Вход</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%;background:#0b1220;color:#e6edf7;
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Inter,Arial,sans-serif}
+  .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .box{width:100%;max-width:340px;text-align:center}
+  .logo{width:56px;height:56px;margin:0 auto 18px;border-radius:14px;
+    background:linear-gradient(135deg,#3b82f6,#a78bfa);
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:24px;color:#fff}
+  h1{font-size:18px;font-weight:700;margin:0 0 4px}
+  .sub{color:#9aa7bd;font-size:13px;margin-bottom:22px}
+  .pin{display:flex;justify-content:center;gap:10px;margin-bottom:16px}
+  .dot{width:14px;height:14px;border-radius:50%;background:#22304d;transition:background .15s}
+  .dot.on{background:#60a5fa}
+  .dot.err{background:#ef4444}
+  .keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .key{background:#16213a;border:1px solid #22304d;color:#e6edf7;
+    font-size:20px;font-weight:600;height:56px;border-radius:14px;cursor:pointer;
+    -webkit-tap-highlight-color:transparent;transition:background .1s}
+  .key:active{background:#22304d}
+  .key.fn{background:transparent;border:0;font-size:14px;color:#9aa7bd}
+  .err-msg{color:#ef4444;font-size:12px;height:16px;margin-top:10px;opacity:0;transition:opacity .2s}
+  .err-msg.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box">
+    <div class="logo">ДО</div>
+    <h1>Доктор Оптика</h1>
+    <div class="sub">Введите PIN-код для входа</div>
+
+    <div class="pin">
+      <div class="dot" id="d0"></div>
+      <div class="dot" id="d1"></div>
+      <div class="dot" id="d2"></div>
+      <div class="dot" id="d3"></div>
+    </div>
+
+    <div class="keypad">
+      <button class="key" data-k="1">1</button>
+      <button class="key" data-k="2">2</button>
+      <button class="key" data-k="3">3</button>
+      <button class="key" data-k="4">4</button>
+      <button class="key" data-k="5">5</button>
+      <button class="key" data-k="6">6</button>
+      <button class="key" data-k="7">7</button>
+      <button class="key" data-k="8">8</button>
+      <button class="key" data-k="9">9</button>
+      <button class="key fn" id="clr">очистить</button>
+      <button class="key" data-k="0">0</button>
+      <button class="key fn" id="del">⌫</button>
+    </div>
+
+    <div class="err-msg" id="err">Неверный код</div>
+  </div>
+</div>
+
+<script>
+  // Простой парольный гейт. PIN хранится в коде клиента — это НЕ безопасность,
+  // а удобство ("не заходи случайно"). Реальная защита — приватный репозиторий.
+  const PIN = '1406';
+  let buf = '';
+  const dots = [0,1,2,3].map(i => document.getElementById('d'+i));
+  const err  = document.getElementById('err');
+
+  function render(){
+    dots.forEach((d,i) => {
+      d.classList.toggle('on', i < buf.length);
+      d.classList.remove('err');
+    });
+  }
+  function shake(){
+    dots.forEach(d => d.classList.add('err'));
+    err.classList.add('show');
+    setTimeout(() => {
+      err.classList.remove('show');
+      buf = '';
+      render();
+    }, 700);
+  }
+  function check(){
+    if (buf === PIN){
+      // 12 часов сессии — потом снова PIN
+      const exp = Date.now() + 12*60*60*1000;
+      sessionStorage.setItem('do_auth_exp', exp);
+      location.href = 'dashboard.html';
+    } else {
+      shake();
+    }
+  }
+
+  document.querySelectorAll('.key[data-k]').forEach(b => {
+    b.addEventListener('click', () => {
+      if (buf.length >= 4) return;
+      buf += b.dataset.k;
+      render();
+      if (buf.length === 4) setTimeout(check, 100);
+    });
+  });
+  document.getElementById('del').addEventListener('click', () => {
+    buf = buf.slice(0,-1); render();
+  });
+  document.getElementById('clr').addEventListener('click', () => {
+    buf = ''; render();
+  });
+
+  // На случай, если открыто на компьютере — клавиатура тоже работает
+  document.addEventListener('keydown', e => {
+    if (/^[0-9]$/.test(e.key) && buf.length < 4){
+      buf += e.key; render();
+      if (buf.length === 4) setTimeout(check, 100);
+    } else if (e.key === 'Backspace'){
+      buf = buf.slice(0,-1); render();
+    } else if (e.key === 'Enter' && buf.length === 4){
+      check();
+    }
+  });
+</script>
+</body>
+</html>

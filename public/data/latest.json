@@ -1,0 +1,196 @@
+{
+  "meta": {
+    "date": "2026-05-14",
+    "date_display": "14.05.2026, чт",
+    "updated_at": "2026-05-14T23:50:00+07:00",
+    "version": "1.0",
+    "source_files": [
+      "ДДС_Май_2026_закрыт_14_05.xlsx",
+      "КББ.png",
+      "uncompletedOrdersReport.xls",
+      "moneyMovementDetailsReport.xls",
+      "moneyMovementReport.xls",
+      "salesProfitReport_Бардина.xls",
+      "salesProfitReport_Дружбы.xls",
+      "payments.html"
+    ]
+  },
+
+  "stoplight": {
+    "color": "amber",
+    "label": "Овердрафт 78%"
+  },
+
+  "money_now": {
+    "total": 1207353,
+    "status_color": "green",
+    "status_label": "Ликвидность OK",
+    "accounts": [
+      {"name": "Р/с Сбер ООО",   "value": 479638},
+      {"name": "Депозит ИН",      "value": 461258},
+      {"name": "Сейф",             "value": 126600},
+      {"name": "Заначка ИН",       "value": 95209},
+      {"name": "Касса Бардина",    "value": 38160},
+      {"name": "Касса Дружбы",     "value": 3454},
+      {"name": "Одуван (хоз)",     "value": 3034}
+    ]
+  },
+
+  "overdraft": {
+    "used":       1168594,
+    "free":       331406,
+    "limit":      1500000,
+    "percent":    78,
+    "color":      "amber",
+    "kbb_balance": 61157,
+    "due_date":   "15.06.2026",
+    "monthly_interest": 35000
+  },
+
+  "stock": {
+    "uncompleted_orders": {
+      "to_pay":     310987,
+      "orders_qty": 114,
+      "older_30d":  3
+    },
+    "warehouse_cost":  3281244,
+    "warehouse_sale": 5906000,
+    "suppliers_debt":  1288029
+  },
+
+  "payment_calendar": {
+    "next_7_days":  461050,
+    "next_14_days": 718390,
+    "note": "факт уже списанных (ЗП 05.05, отпускные, поставщики 04–07.05, аренда Дружбы) исключён"
+  },
+
+  "pending_payments": {
+    "total": 626350,
+    "future": {
+      "total": 27167,
+      "count": 4,
+      "items": [
+        {"recipient": "ООО «Компания «Тензор»",  "amount": 20400, "date": "15.05", "purpose": "ЭДО, счёт от 04.05.2026"},
+        {"recipient": "ООО «ЭНЕРГОТРАНЗИТ»",       "amount":  4962, "date": "18.05", "purpose": "электроэнергия, счёт 04.05"},
+        {"recipient": "ООО «УК «Проспект»",         "amount":  1320, "date": "25.05", "purpose": "коммуналка, счёт от 30.04"},
+        {"recipient": "ООО «Водоканал»",            "amount":   485, "date": "25.05", "purpose": "ХВС + водоотведение, апрель"}
+      ]
+    },
+    "past_or_undated": {
+      "total": 599183,
+      "count": 11,
+      "note": "могут быть уже списаны — сверить с выпиской КББ",
+      "items": [
+        {"recipient": "ИП Пустовалова Елена В.",        "amount": 117500, "date": "13.05", "purpose": "аренда Бардина 38, май"},
+        {"recipient": "ИП Пустовалов Игорь С.",         "amount": 117500, "date": "08.05", "purpose": "аренда Бардина 38, май"},
+        {"recipient": "ООО «Джонсон & Джонсон»",        "amount":  96632, "date": "13.05", "purpose": "контактные линзы"},
+        {"recipient": "ООО «ВТОРАЯ ОПТИЧЕСКАЯ КОМПАНИЯ»","amount":  47731,"date": "08.05", "purpose": "покупка оправ"},
+        {"recipient": "ООО «ОПТИКА-САЙМ»",              "amount":  40977, "date": "—",     "purpose": "с/з очки, счёт от 19.02"},
+        {"recipient": "ООО «Т2 Мобайл»",                "amount":   9763, "date": "13.05", "purpose": "услуги связи, апрель"},
+        {"recipient": "ООО «Е-Лайт-Телеком»",           "amount":   9288, "date": "13.05", "purpose": "интернет за май"},
+        {"recipient": "ПАО «ВымпелКом»",                "amount":   5804, "date": "13.05", "purpose": "связь, апрель"},
+        {"recipient": "ООО «ЧОП «Русич»",               "amount":   3020, "date": "13.05", "purpose": "охрана Бардина 38"},
+        {"recipient": "ООО «ЭкоТек»",                   "amount":   2714, "date": "13.05", "purpose": "услуги ТКО, апрель"},
+        {"recipient": "ИП Пириева Валентина Л.",        "amount": 148255, "date": "11.04", "purpose": "покупка оправ (старый платёж)"}
+      ]
+    }
+  },
+
+  "loans": {
+    "total":       14403112,
+    "active_qty":  10,
+    "frozen_qty":  1,
+    "monthly_payment": 431390,
+    "interest_part":   240283,
+    "interest_percent": 57,
+    "body_part":       182060,
+    "body_percent":     43,
+    "items": [
+      {"id":"KBB_OVER","name":"КББ Овердрафт","priority":true,"tag":"досрочка",
+       "payment":35000,"balance":1168594,"rate":"22,9%","type":"% only","due":"15.06.2026"},
+
+      {"id":"SPIRIDONOV","name":"Спиридонов","warning":true,"tag":"% only",
+       "payment":73000,"balance":3500000,"rate":"25%","type":"тело не гасится","due":"15.05.2026"},
+
+      {"id":"DELTA_LEASING","name":"Лизинг ДельтаЛиз","tag":"ОКТ",
+       "payment":112342,"balance":3739895,"rate":"~15%","type":"до 31.10.2029","due":"25.05.2026"},
+
+      {"id":"KBB_3MLN","name":"КББ 3 млн","tag":"офис",
+       "payment":86000,"balance":2990000,"rate":"21,9%","type":"залог Дружбы 31","due":"31.05.2026"},
+
+      {"id":"SBER_3_SA","name":"Сбер 3 СА",
+       "payment":44246,"balance":1094376,"rate":"12,88%","type":"","due":"25.05.2026"},
+
+      {"id":"SBER_4_SA","name":"Сбер 4 СА",
+       "payment":18500,"balance":480000,"rate":"21,0%","type":"","due":"30.05.2026"},
+
+      {"id":"SBER_1_IN","name":"Сбер 1 ИН",
+       "payment":30318,"balance":602000,"rate":"17,95%","type":"","due":"31.05.2026"},
+
+      {"id":"SBER_2_IN","name":"Сбер 2 ИН",
+       "payment":12609,"balance":275500,"rate":"17,90%","type":"","due":"31.05.2026"},
+
+      {"id":"SBER_3_IN","name":"Сбер 3 ИН","tag":"цель Заначки",
+       "payment":10561,"balance":168000,"rate":"20,05%","type":"Заначка 95К/168К","due":"31.05.2026"},
+
+      {"id":"SBER_4_IN","name":"Сбер 4 ИН",
+       "payment":8814,"balance":189000,"rate":"25,05%","type":"самая дорогая ставка","due":"31.05.2026"},
+
+      {"id":"PAVLIK","name":"Павлик","frozen":true,"tag":"заморожен",
+       "payment":0,"balance":1200000,"rate":"20%","type":"мораторий до мая 2027","due":"—"}
+    ]
+  },
+
+  "sales": {
+    "kpi": {
+      "gross_profit":   156197,
+      "margin_percent":   75.2,
+      "revenue":        207668,
+      "items_qty":         115,
+      "cash":           149070,
+      "checks_qty":         62,
+      "refunds":          -8950,
+      "refunds_note":   "Дружбы товар"
+    },
+    "glasses": {
+      "total_qty":   26,
+      "total_sum":   107823,
+      "bardina":    {"qty":23,"sum":89023},
+      "druzhby":    {"qty":3,"sum":18800},
+      "lenses":     {"qty":18,"sum":86940},
+      "frames":     {"qty":8, "sum":20883}
+    },
+    "mkl": {
+      "total_qty":  8,
+      "total_sum":  14050,
+      "bardina":   {"qty":0,"sum":0},
+      "druzhby":   {"qty":8,"sum":14050}
+    },
+    "services": {
+      "total_qty": 69,
+      "total_sum": 75850,
+      "items": [
+        {"name":"ОКТ (все виды)","qty":16,"sum":32500},
+        {"name":"Консультация офт.","qty":8,"sum":17600},
+        {"name":"ЛДВК (лазер) 1 глаз","qty":1,"sum":7000},
+        {"name":"Изготовление очков","qty":9,"sum":6000},
+        {"name":"УЗИ глаза","qty":3,"sum":4500},
+        {"name":"Периметрия","qty":4,"sum":2400},
+        {"name":"Авторефрактокератометрия","qty":7,"sum":1750},
+        {"name":"Диспансерный осмотр","qty":2,"sum":2000},
+        {"name":"Маклаков (ВГД)","qty":4,"sum":1600},
+        {"name":"КЧСМ","qty":1,"sum":500},
+        {"name":"Бесплатные (подбор/проверка)","qty":14,"sum":0}
+      ]
+    },
+    "other": {
+      "total_qty": 16,
+      "total_sum": 10045,
+      "items": [
+        {"name":"Аксессуары","qty":14,"sum":5245},
+        {"name":"Массовка (готовые очки)","qty":1,"sum":2900},
+        {"name":"Солнцезащитные","qty":1,"sum":1800}
+      ]
+    }
+  }
+}

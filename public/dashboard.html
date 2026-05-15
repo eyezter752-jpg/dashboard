@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<title>Доктор Оптика — Дашборд</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hdr">
+    <div class="logo">ДО</div>
+    <div>
+      <div class="title">Доктор Оптика</div>
+      <div class="sub" id="hdr-sub">загрузка…</div>
+    </div>
+    <div class="right">
+      <span class="stoplight" id="stoplight"><span class="dot"></span><span id="stoplight-label">…</span></span>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button class="on" data-tab="money">Деньги</button>
+    <button data-tab="debt">Долги</button>
+    <button data-tab="sales">Продажи</button>
+  </div>
+
+  <!-- PANE 1 — ДЕНЬГИ -->
+  <div class="pane on" id="pane-money">
+
+    <div class="card">
+      <h2>Деньги сейчас <span class="badge" id="money-status"></span></h2>
+      <div class="big" id="money-total">…<span class="cur">₽</span></div>
+      <div class="sub-line">сумма на собственных счетах</div>
+      <div id="money-accounts"></div>
+    </div>
+
+    <div class="card">
+      <h2>Овердрафт КББ <span class="badge" id="od-badge"></span></h2>
+      <div class="od-grid">
+        <div class="od-cell"><div class="l">Использовано</div><div class="v" id="od-used">…</div></div>
+        <div class="od-cell"><div class="l">Запас (свободно)</div><div class="v" id="od-free">…</div></div>
+      </div>
+      <div class="bar"><i id="od-bar"></i></div>
+      <div class="bar-cap"><span>0</span><span>лимит <span id="od-limit">…</span> ₽</span></div>
+
+      <div class="row" style="margin-top:8px"><span class="lbl">Р/с КББ ИП · остаток</span><span class="val" id="od-balance">…</span></div>
+      <div class="row"><span class="lbl">Дата гашения овердрафта</span><span class="val" id="od-due" style="color:var(--red)">…</span></div>
+      <div class="row"><span class="lbl">Проценты в месяц</span><span class="val" id="od-int">…</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Товарка</h2>
+      <div class="row">
+        <span class="lbl">Невыданные заказы · доплата клиентов
+          <small id="orders-note" style="display:block;color:var(--muted);font-size:11px;margin-top:1px"></small>
+        </span>
+        <span class="val" id="orders-topay" style="color:var(--green)">…</span>
+      </div>
+      <div class="row"><span class="lbl">Склад · себестоимость</span><span class="val" id="stock-cost">…</span></div>
+      <div class="row"><span class="lbl">Склад · стоимость продажи</span><span class="val" id="stock-sale">…</span></div>
+      <div class="row"><span class="lbl">Задолженность поставщикам</span><span class="val" id="suppliers-debt" style="color:var(--amber)">…</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Платежи · платёжный календарь</h2>
+      <div class="row"><span class="lbl" id="pc-7-label">Ближайшие 7 дней</span><span class="val" id="pc-7" style="color:var(--red)">…</span></div>
+      <div class="row"><span class="lbl" id="pc-14-label">Ближайшие 14 дней</span><span class="val" id="pc-14">…</span></div>
+      <div class="sub-line" id="pc-note" style="margin-top:6px"></div>
+    </div>
+
+    <div class="card">
+      <h2>Подготовлены в банке к оплате</h2>
+      <div class="big" style="font-size:24px" id="pp-total">…<span class="cur">₽</span></div>
+      <div class="sub-line" id="pp-sub"></div>
+      <div class="row" style="margin-top:8px">
+        <span class="lbl">Будущие (после <span id="pp-today">сегодня</span>)</span>
+        <span class="val" id="pp-future" style="color:var(--amber)">…</span>
+      </div>
+      <div class="row">
+        <span class="lbl">Прошлые / без даты</span>
+        <span class="val" id="pp-past" style="color:var(--muted)">…</span>
+      </div>
+      <div class="sub-line" style="margin-top:6px">прошлые могут быть уже списаны — сверить с выпиской</div>
+    </div>
+
+  </div>
+
+  <!-- PANE 2 — ОБЯЗАТЕЛЬСТВА -->
+  <div class="pane" id="pane-debt">
+
+    <div class="card">
+      <h2>Кредитный портфель</h2>
+      <div class="big" id="loans-total">…<span class="cur">₽</span></div>
+      <div class="sub-line" id="loans-counts"></div>
+      <div class="row"><span class="lbl">Платёж в текущем месяце</span><span class="val" id="loans-monthly">…</span></div>
+      <div class="row"><span class="lbl">из них проценты</span><span class="val" id="loans-int" style="color:var(--amber)">…</span></div>
+      <div class="row"><span class="lbl">из них тело</span><span class="val" id="loans-body" style="color:var(--green)">…</span></div>
+    </div>
+
+    <div class="card">
+      <h2>По займам</h2>
+      <div id="loans-list"></div>
+    </div>
+
+    <div class="card">
+      <h2>Подготовлены в банке к оплате <span class="badge amber" id="pp-badge"></span></h2>
+      <div class="pending-section" style="border-top:0;padding-top:0;margin-top:0">
+        <div class="sec-h">
+          <span>🟡 БУДУЩИЕ (точно ещё ждут) · <span id="pp-f-count">0</span></span>
+          <span class="sum" id="pp-f-sum">0 ₽</span>
+        </div>
+        <div id="pp-future-list"></div>
+      </div>
+      <div class="pending-section">
+        <div class="sec-h">
+          <span>⚪ ПРОШЛЫЕ / БЕЗ ДАТЫ · <span id="pp-p-count">0</span></span>
+          <span class="sum" id="pp-p-sum" style="color:var(--muted)">0 ₽</span>
+        </div>
+        <div class="sub-line" style="margin-bottom:10px">могут быть уже списаны — сверить с выпиской КББ</div>
+        <div id="pp-past-list"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PANE 3 — ПРОДАЖИ -->
+  <div class="pane" id="pane-sales">
+
+    <div class="card">
+      <h2 id="sales-h2">Сегодня</h2>
+      <div class="kpi-grid">
+        <div class="kpi">
+          <div class="l">Валовая прибыль дня</div>
+          <div class="v" style="color:var(--green)" id="kpi-gp">…</div>
+          <div class="d delta-up" id="kpi-margin">…</div>
+        </div>
+        <div class="kpi">
+          <div class="l">Выручка по продажам</div>
+          <div class="v" id="kpi-rev">…</div>
+          <div class="d" id="kpi-items">…</div>
+        </div>
+        <div class="kpi">
+          <div class="l">Касса дня</div>
+          <div class="v" id="kpi-cash">…</div>
+          <div class="d" id="kpi-checks">…</div>
+        </div>
+        <div class="kpi">
+          <div class="l">Возвраты</div>
+          <div class="v" style="color:var(--red)" id="kpi-ref">…</div>
+          <div class="d" id="kpi-ref-note">…</div>
+        </div>
+      </div>
+      <div class="sub-line" style="margin-top:10px">выручка = выдано (fulfillment) · касса = пробито в кассах за день</div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title">
+        <h3>👓 Очки (линзы + оправы)</h3>
+        <small id="glasses-tot"></small>
+      </div>
+      <div class="sales-list" id="glasses-list"></div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title">
+        <h3>👁 Контактные линзы (МКЛ)</h3>
+        <small id="mkl-tot"></small>
+      </div>
+      <div class="sales-list" id="mkl-list"></div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title">
+        <h3>🩺 Услуги клиники</h3>
+        <small id="services-tot"></small>
+      </div>
+      <div class="sales-list" id="services-list"></div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title">
+        <h3>📦 Прочее</h3>
+        <small id="other-tot"></small>
+      </div>
+      <div class="sales-list" id="other-list"></div>
+    </div>
+
+  </div>
+
+  <div class="footer">Доктор Оптика · <span id="footer-date"></span> · v<span id="footer-ver"></span></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
