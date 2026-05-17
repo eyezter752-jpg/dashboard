@@ -4,125 +4,705 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1220">
-<title>Doctor Optic — Login</title>
+<title>Doctor Optic — 16.05.2026</title>
 <style>
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0;height:100%;background:#0b1220;color:#e6edf7;
-    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Inter,Arial,sans-serif}
-  .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-  .box{width:100%;max-width:340px;text-align:center}
-  .logo{width:56px;height:56px;margin:0 auto 18px;border-radius:14px;
+  :root{
+    --bg:#0b1220; --bg2:#111a2e; --card:#16213a; --card2:#1c2a48; --line:#22304d;
+    --text:#e6edf7; --muted:#9aa7bd; --accent:#60a5fa;
+    --green:#22c55e; --green-bg:rgba(34,197,94,.12);
+    --amber:#eab308; --amber-bg:rgba(234,179,8,.14);
+    --red:#ef4444; --red-bg:rgba(239,68,68,.14);
+    --purple:#a78bfa;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Inter,Arial,sans-serif;
+    font-size:15px;line-height:1.35;
+    padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+  .wrap{max-width:440px;margin:0 auto;padding:14px 14px 80px}
+
+  .hdr{display:flex;align-items:center;gap:10px;padding:6px 4px 14px}
+  .hdr .logo{width:34px;height:34px;border-radius:10px;
     background:linear-gradient(135deg,#3b82f6,#a78bfa);
-    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:24px;color:#fff}
-  h1{font-size:18px;font-weight:700;margin:0 0 4px}
-  .sub{color:#9aa7bd;font-size:13px;margin-bottom:22px}
-  .pin{display:flex;justify-content:center;gap:10px;margin-bottom:16px}
-  .dot{width:14px;height:14px;border-radius:50%;background:#22304d;transition:background .15s}
-  .dot.on{background:#60a5fa}
-  .dot.err{background:#ef4444}
-  .keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-  .key{background:#16213a;border:1px solid #22304d;color:#e6edf7;
-    font-size:20px;font-weight:600;height:56px;border-radius:14px;cursor:pointer;
-    -webkit-tap-highlight-color:transparent;transition:background .1s}
-  .key:active{background:#22304d}
-  .key.fn{background:transparent;border:0;font-size:14px;color:#9aa7bd}
-  .err-msg{color:#ef4444;font-size:12px;height:16px;margin-top:10px;opacity:0;transition:opacity .2s}
-  .err-msg.show{opacity:1}
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:#fff}
+  .hdr .title{font-weight:700;font-size:16px;letter-spacing:.2px}
+  .hdr .sub{color:var(--muted);font-size:12px;margin-top:2px}
+  .hdr .right{margin-left:auto;text-align:right}
+  .stoplight{display:inline-flex;align-items:center;gap:6px;font-size:12px;
+    padding:5px 9px;border-radius:999px;background:var(--amber-bg);color:var(--amber);font-weight:600}
+  .stoplight .dot{width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:14px;margin-bottom:12px;position:relative;overflow:hidden}
+  .card h2{margin:0 0 10px;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;
+    color:var(--muted);font-weight:600;display:flex;align-items:center;gap:8px}
+  .card h2 .badge{font-size:10px;padding:2px 7px;border-radius:999px;letter-spacing:.5px;text-transform:none}
+  .badge.red{background:var(--red-bg);color:var(--red)}
+  .badge.amber{background:var(--amber-bg);color:var(--amber)}
+  .badge.green{background:var(--green-bg);color:var(--green)}
+
+  .big{font-size:30px;font-weight:700;letter-spacing:-.5px;line-height:1.05}
+  .big .cur{font-size:18px;color:var(--muted);margin-left:4px;font-weight:500}
+  .sub-line{color:var(--muted);font-size:12px;margin-top:2px}
+
+  .row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;
+    border-top:1px dashed var(--line)}
+  .row:first-of-type{border-top:0}
+  .row .lbl{color:var(--muted);font-size:13px}
+  .row .val{font-variant-numeric:tabular-nums;font-weight:600;font-size:14px}
+  .row .lbl small{display:block;color:var(--muted);font-size:11px;margin-top:1px;opacity:.7}
+
+  .delta-bad{color:var(--red);font-size:11px;font-weight:600}
+  .delta-good{color:var(--green);font-size:11px;font-weight:600}
+
+  .od-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .od-cell{background:var(--card2);border-radius:10px;padding:10px}
+  .od-cell .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+  .od-cell .v{font-size:18px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
+  .bar{height:8px;background:var(--bg2);border-radius:99px;overflow:hidden;margin-top:10px}
+  .bar > i{display:block;height:100%;border-radius:99px;
+    background:linear-gradient(90deg,#22c55e,#eab308 60%,#ef4444 90%)}
+  .bar-cap{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:6px}
+
+  .loan{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:10px 0;border-top:1px solid var(--line)}
+  .loan:first-of-type{border-top:0}
+  .loan .name{font-weight:600;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .loan .name .pill{font-size:10px;padding:2px 6px;border-radius:999px;
+    background:var(--bg2);color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+  .loan .pay{font-variant-numeric:tabular-nums;font-weight:700;text-align:right}
+  .loan .ost{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+  .loan .dt{color:var(--muted);font-size:12px;text-align:right;font-variant-numeric:tabular-nums}
+  .loan .end{color:var(--purple);font-size:11px;font-weight:600;margin-left:6px}
+  .loan.priority{background:var(--red-bg);margin:6px -14px;padding:10px 14px;
+    border-radius:10px;border-top:0;box-shadow:inset 3px 0 0 var(--red)}
+  .loan.priority .name{color:var(--red)}
+  .loan.warning{background:var(--amber-bg);margin:6px -14px;padding:10px 14px;
+    border-radius:10px;border-top:0;box-shadow:inset 3px 0 0 var(--amber)}
+  .loan.warning .name{color:var(--amber)}
+  .loan.frozen{opacity:.55}
+
+  .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+  .kpi{background:var(--card2);border-radius:12px;padding:12px}
+  .kpi .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
+  .kpi .d{font-size:11px;margin-top:2px;font-variant-numeric:tabular-nums}
+
+  .sales-list .item{display:flex;justify-content:space-between;align-items:center;
+    padding:8px 0;border-top:1px dashed var(--line)}
+  .sales-list .item:first-child{border-top:0}
+  .sales-list .lbl{display:flex;align-items:center;gap:8px}
+  .sales-list .ic{width:26px;height:26px;border-radius:8px;background:var(--card2);
+    display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--accent)}
+  .sales-list .qty{color:var(--muted);font-size:12px;margin-left:6px}
+  .sales-list .v{font-variant-numeric:tabular-nums;font-weight:600;font-size:14px}
+
+  .sec-title{display:flex;justify-content:space-between;align-items:center;margin:4px 0 8px}
+  .sec-title h3{margin:0;font-size:13px;font-weight:600;color:var(--text)}
+  .sec-title small{color:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
+
+  .footer{color:var(--muted);font-size:11px;text-align:center;padding:14px 4px 0}
+
+  .nav{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;
+    background:rgba(22,33,58,.85);backdrop-filter:blur(14px);
+    border:1px solid var(--line);border-radius:999px;padding:6px;display:flex;gap:4px;
+    box-shadow:0 8px 30px rgba(0,0,0,.4);z-index:50}
+  .nav button{background:transparent;color:var(--muted);border:0;padding:8px 14px;
+    border-radius:999px;font-size:12px;font-weight:600;cursor:pointer;letter-spacing:.3px}
+  .nav button.on{background:var(--accent);color:#0b1220}
+
+  .pane{display:none}
+  .pane.on{display:block}
+
+  .pending-item{display:flex;justify-content:space-between;align-items:flex-start;
+    padding:10px 0;border-top:1px dashed var(--line);gap:10px}
+  .pending-item:first-of-type{border-top:0}
+  .pending-item .pl{font-size:13px;color:var(--text);flex:1}
+  .pending-item .pl small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+  .pending-item .pv{font-variant-numeric:tabular-nums;font-weight:600;font-size:14px;text-align:right;white-space:nowrap}
+  .pending-section{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+  .pending-section .sec-h{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;
+    margin-bottom:6px;display:flex;justify-content:space-between;align-items:baseline}
+  .pending-section .sec-h .sum{color:var(--amber);font-weight:700;font-variant-numeric:tabular-nums;text-transform:none;font-size:13px}
+
+  /* График */
+  .chart-wrap{margin-top:8px}
+  .chart-legend{display:flex;gap:14px;font-size:11px;color:var(--muted);margin-bottom:8px}
+  .chart-legend .dot{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;vertical-align:middle}
+  .chart-totals{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .chart-totals .cell{background:var(--card2);border-radius:10px;padding:10px}
+  .chart-totals .l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+  .chart-totals .v{font-size:16px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
+  .chart-totals .v .cur{font-size:12px;color:var(--muted)}
+
+  /* Архив - предыдущий день */
+  .arch-day{background:var(--card2);border-radius:12px;padding:12px;margin-top:6px}
+  .arch-day .head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+  .arch-day .head .d{font-size:13px;color:var(--muted);font-weight:600}
+  .arch-day .head .b{font-size:18px;font-weight:700;color:var(--green);font-variant-numeric:tabular-nums}
+  .arch-day .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;font-size:11px}
+  .arch-day .grid .it{text-align:center;padding:6px 4px;background:var(--bg);border-radius:8px}
+  .arch-day .grid .it .v{font-size:14px;font-weight:700;display:block;font-variant-numeric:tabular-nums}
+  .arch-day .grid .it .l{color:var(--muted);font-size:10px;margin-top:2px}
+
+  /* Пояснение по очкам */
+  .glasses-note{background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.25);
+    border-radius:10px;padding:10px;margin-bottom:10px;font-size:12px;color:var(--text)}
+  .glasses-note b{color:var(--accent)}
+  .glasses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+  .glasses-grid .cell{background:var(--card2);border-radius:10px;padding:10px;text-align:center}
+  .glasses-grid .cell .v{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
+  .glasses-grid .cell .l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:2px}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="box">
+
+  <div class="hdr">
     <div class="logo">ДО</div>
-    <h1>Doctor Optic</h1>
-    <div class="sub">Введите PIN-код для входа</div>
-
-    <div class="pin">
-      <div class="dot" id="d0"></div>
-      <div class="dot" id="d1"></div>
-      <div class="dot" id="d2"></div>
-      <div class="dot" id="d3"></div>
+    <div>
+      <div class="title">Doctor Optic</div>
+      <div class="sub">16.05.2026, сб · обновлено 23:50</div>
     </div>
-
-    <div class="keypad">
-      <button class="key" data-k="1">1</button>
-      <button class="key" data-k="2">2</button>
-      <button class="key" data-k="3">3</button>
-      <button class="key" data-k="4">4</button>
-      <button class="key" data-k="5">5</button>
-      <button class="key" data-k="6">6</button>
-      <button class="key" data-k="7">7</button>
-      <button class="key" data-k="8">8</button>
-      <button class="key" data-k="9">9</button>
-      <button class="key fn" id="clr">очистить</button>
-      <button class="key" data-k="0">0</button>
-      <button class="key fn" id="del">⌫</button>
+    <div class="right">
+      <span class="stoplight"><span class="dot"></span>Овердрафт 82%</span>
     </div>
-
-    <div class="err-msg" id="err">Неверный код</div>
   </div>
+
+  <div class="nav">
+    <button class="on" data-tab="money">Деньги</button>
+    <button data-tab="debt">Долги</button>
+    <button data-tab="sales">Продажи</button>
+  </div>
+
+  <!-- =============================== -->
+  <!-- ДЕНЬГИ -->
+  <!-- =============================== -->
+  <div class="pane on" id="pane-money">
+
+    <div class="card">
+      <h2>Деньги сейчас <span class="badge green">Ликвидность OK</span></h2>
+      <div class="big">1 126 015<span class="cur">₽</span></div>
+      <div class="sub-line">сумма на собственных счетах · <span class="delta-bad">▼ −81 339 ₽ vs 14.05</span></div>
+
+      <div class="row"><span class="lbl">Р/с Сбер ООО</span><span class="val">497 423 ₽</span></div>
+      <div class="row"><span class="lbl">Депозит ИН</span><span class="val">388 600 ₽</span></div>
+      <div class="row"><span class="lbl">Сейф</span><span class="val">102 000 ₽</span></div>
+      <div class="row"><span class="lbl">Заначка ИН</span><span class="val">95 209 ₽</span></div>
+      <div class="row"><span class="lbl">Касса Дружбы</span><span class="val">30 424 ₽</span></div>
+      <div class="row"><span class="lbl">Касса Бардина</span><span class="val">12 360 ₽</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Овердрафт КББ <span class="badge amber">82%</span></h2>
+      <div class="od-grid">
+        <div class="od-cell">
+          <div class="l">Использовано</div>
+          <div class="v">1 228 379 ₽</div>
+        </div>
+        <div class="od-cell">
+          <div class="l">Запас (свободно)</div>
+          <div class="v" style="color:var(--amber)">271 621 ₽</div>
+        </div>
+      </div>
+      <div class="bar"><i style="width:82%"></i></div>
+      <div class="bar-cap"><span>0</span><span>лимит 1 500 000 ₽</span></div>
+
+      <div class="row" style="margin-top:8px"><span class="lbl">Р/с КББ ИП · остаток</span><span class="val" style="color:var(--red)">246 ₽ · почти пустой</span></div>
+      <div class="row"><span class="lbl">Дата гашения овердрафта</span><span class="val" style="color:var(--red)">15.06.2026</span></div>
+      <div class="row"><span class="lbl">Проценты в месяц</span><span class="val">~35 000 ₽</span></div>
+      <div class="row"><span class="lbl">Изменение vs 14.05</span><span class="val delta-bad">▲ +59 786 ₽ за 2 дня</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Товарка</h2>
+      <div class="row">
+        <span class="lbl">Невыданные заказы · доплата клиентов
+          <small>104 заказа · 3 старше 30 дн.</small>
+        </span>
+        <span class="val" style="color:var(--green)">+ 324 817 ₽</span>
+      </div>
+      <div class="row"><span class="lbl">Склад · закупочная стоимость</span><span class="val">3 266 192 ₽</span></div>
+      <div class="row"><span class="lbl">Склад · розничная стоимость</span><span class="val">12 128 704 ₽</span></div>
+      <div class="row"><span class="lbl">Задолженность поставщикам</span><span class="val" style="color:var(--amber)">~1 288 029 ₽</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Платежи · платёжный календарь</h2>
+      <div class="row"><span class="lbl">Ближайшие 7 дней (17–23.05)</span><span class="val" style="color:var(--amber)">~270 000 ₽</span></div>
+      <div class="row"><span class="lbl">Ближайшие 14 дней (17–30.05)</span><span class="val">~580 000 ₽</span></div>
+      <div class="sub-line" style="margin-top:6px">факт уже списанных (ЗП 04–12.05, аренда Дружбы) исключён</div>
+    </div>
+
+    <div class="card">
+      <h2>Подготовлены в банке к оплате</h2>
+      <div class="big" style="font-size:24px">660 646<span class="cur">₽</span></div>
+      <div class="sub-line">17 поручений · детализация во вкладке «Долги»</div>
+      <div class="row" style="margin-top:8px">
+        <span class="lbl">Будущие (после 16.05)</span>
+        <span class="val" style="color:var(--amber)">35 737 ₽ · 4 платежа</span>
+      </div>
+      <div class="row">
+        <span class="lbl">Прошлые / без даты</span>
+        <span class="val" style="color:var(--muted)">624 909 ₽ · 13 платежей</span>
+      </div>
+      <div class="sub-line" style="margin-top:6px">3 старых поручения (Пириева 11.04, Оптика-Сайм 30.03, ТЭЦ б/д) — могут быть давно исполнены</div>
+    </div>
+
+  </div>
+
+  <!-- =============================== -->
+  <!-- ДОЛГИ -->
+  <!-- =============================== -->
+  <div class="pane" id="pane-debt">
+
+    <div class="card">
+      <h2>Кредитный портфель</h2>
+      <div class="big">14 462 897<span class="cur">₽</span></div>
+      <div class="sub-line">10 активных + 1 заморожен (Павлик 1,2 М)</div>
+      <div class="row"><span class="lbl">Платёж в мае (всего)</span><span class="val">431 390 ₽</span></div>
+      <div class="row"><span class="lbl">из них проценты</span><span class="val" style="color:var(--amber)">~240 К · 57%</span></div>
+      <div class="row"><span class="lbl">из них тело</span><span class="val" style="color:var(--green)">~182 К · 43%</span></div>
+    </div>
+
+    <div class="card">
+      <h2>По займам</h2>
+
+      <div class="loan priority">
+        <div class="name">🔴 КББ Овердрафт <span class="pill">досрочка</span><span class="end">до 06.2026</span></div>
+        <div class="pay">35 000 ₽</div>
+        <div class="ost">остаток 1 228 379 ₽ · 22,9% · % only</div>
+        <div class="dt">15.06.2026</div>
+      </div>
+
+      <div class="loan warning">
+        <div class="name">⚠ Спиридонов <span class="pill">% only</span><span class="end">бессрочно</span></div>
+        <div class="pay">73 000 ₽</div>
+        <div class="ost">остаток 3 500 000 ₽ · 25% · тело не гасится</div>
+        <div class="dt">15.05.2026</div>
+      </div>
+
+      <div class="loan">
+        <div class="name">Лизинг ДельтаЛиз <span class="pill">ОКТ</span><span class="end">до 10.2029</span></div>
+        <div class="pay">112 342 ₽</div>
+        <div class="ost">остаток 3 739 895 ₽ · ~15%</div>
+        <div class="dt">25.05.2026</div>
+      </div>
+
+      <div class="loan">
+        <div class="name">КББ 3 млн <span class="pill">офис</span><span class="end">до 08.2030</span></div>
+        <div class="pay">86 000 ₽</div>
+        <div class="ost">остаток 2 990 000 ₽ · 21,9% · залог Дружбы 31</div>
+        <div class="dt">31.05.2026</div>
+      </div>
+
+      <div class="loan">
+        <div class="name">Сбер 3 СА <span class="end">до 01.2028</span></div>
+        <div class="pay">44 246 ₽</div>
+        <div class="ost">остаток 1 094 376 ₽ · 12,88%</div>
+        <div class="dt">25.05.2026</div>
+      </div>
+
+      <div class="loan">
+        <div class="name">Сбер 4 СА <span class="end">до 08.2028</span></div>
+        <div class="pay">18 500 ₽</div>
+        <div class="ost">остаток 480 000 ₽ · 21,0%</div>
+        <div class="dt">30.05.2026</div>
+      </div>
+
+      <div class="loan">
+        <div class="name">Сбер 1 ИН <span class="end">до 03.2028</span></div>
+        <div class="pay">30 318 ₽</div>
+        <div class="ost">остаток 602 000 ₽ · 17,95%</div>
+        <div class="dt">31.05.2026</div>
+      </div>
+
+      <div class="loan">
+        <div class="name">Сбер 2 ИН <span class="end">до 03.2028</span></div>
+        <div class="pay">12 609 ₽</div>
+        <div class="ost">остаток 275 500 ₽ · 17,90%</div>
+        <div class="dt">31.05.2026</div>
+      </div>
+
+      <div class="loan">
+        <div class="name">Сбер 3 ИН <span class="pill">цель Заначки</span><span class="end">до 08.2027</span></div>
+        <div class="pay">10 561 ₽</div>
+        <div class="ost">остаток 168 000 ₽ · 20,05% · Заначка 95К/168К</div>
+        <div class="dt">31.05.2026</div>
+      </div>
+
+      <div class="loan">
+        <div class="name">Сбер 4 ИН <span class="end">до 02.2028</span></div>
+        <div class="pay">8 814 ₽</div>
+        <div class="ost">остаток 189 000 ₽ · 25,05% · самая дорогая ставка</div>
+        <div class="dt">31.05.2026</div>
+      </div>
+
+      <div class="loan frozen">
+        <div class="name">Павлик <span class="pill">заморожен</span><span class="end">до 05.2027</span></div>
+        <div class="pay">0 ₽</div>
+        <div class="ost">остаток 1 200 000 ₽ · 20% · мораторий</div>
+        <div class="dt">—</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Подготовлены в банке к оплате <span class="badge amber">17 платежей · 660 646 ₽</span></h2>
+
+      <div class="pending-section" style="border-top:0;padding-top:0;margin-top:0">
+        <div class="sec-h">
+          <span>🟡 БУДУЩИЕ (точно ждут) · 4</span>
+          <span class="sum">35 737 ₽</span>
+        </div>
+
+        <div class="pending-item">
+          <div class="pl">ООО «ДубльГИС»<small>25.05 · реклама · Сбер</small></div>
+          <div class="pv">28 970 ₽</div>
+        </div>
+        <div class="pending-item">
+          <div class="pl">ООО «ЭНЕРГОТРАНЗИТ»<small>18.05 · электроэнергия · КББ</small></div>
+          <div class="pv">4 962 ₽</div>
+        </div>
+        <div class="pending-item">
+          <div class="pl">ООО «УК «Проспект»<small>25.05 · коммуналка · КББ</small></div>
+          <div class="pv">1 320 ₽</div>
+        </div>
+        <div class="pending-item">
+          <div class="pl">ООО «Водоканал»<small>25.05 · ХВС + водоотведение · КББ</small></div>
+          <div class="pv">485 ₽</div>
+        </div>
+      </div>
+
+      <div class="pending-section">
+        <div class="sec-h">
+          <span>⚪ ПРОШЛЫЕ / БЕЗ ДАТЫ · 13</span>
+          <span class="sum" style="color:var(--muted)">624 909 ₽</span>
+        </div>
+        <div class="sub-line" style="margin-bottom:10px">могут быть уже списаны — сверить с выписками</div>
+
+        <div class="pending-item">
+          <div class="pl">ИП Пириева Валентина Л.<small>11.04 · оправы · СТАРАЯ · КББ</small></div>
+          <div class="pv" style="color:var(--red)">148 255 ₽</div>
+        </div>
+        <div class="pending-item">
+          <div class="pl">ИП Пустовалова Елена В.<small>13.05 · аренда Бардина · КББ</small></div>
+          <div class="pv">117 500 ₽</div>
+        </div>
+        <div class="pending-item">
+          <div class="pl">ИП Пустовалов Игорь С.<small>08.05 · аренда Бардина · КББ</small></div>
+          <div class="pv">117 500 ₽</div>
+        </div>
+        <div class="pending-item">
+          <div class="pl">Федорченко Татьяна<small>04.05 · аренда Дружбы · Сбер</small></div>
+          <div class="pv">67 000 ₽</div>
+        </div>
+        <div class="pending-item">
+          <div class="pl">ООО «ВТОРАЯ ОПТИЧЕСКАЯ»<small>08.05 · покупка оправ · КББ</small></div>
+          <div class="pv">47 731 ₽</div>
+        </div>
+        <div class="pending-item">
+          <div class="pl">АО «Кузнецкая ТЭЦ»<small>без даты · теплоэнергия · КББ</small></div>
+          <div class="pv" style="color:var(--red)">42 038 ₽</div>
+        </div>
+        <div class="pending-item">
+          <div class="pl">ООО «ОПТИКА-САЙМ»<small>30.03 · с/з очки · СТАРАЯ · КББ</small></div>
+          <div class="pv" style="color:var(--red)">40 977 ₽</div>
+        </div>
+        <div class="pending-item">
+          <div class="pl">ООО «Компания «Тензор»<small>13.05 · ЭДО · КББ</small></div>
+          <div class="pv">20 400 ₽</div>
+        </div>
+        <div class="pending-item">
+          <div class="pl">Ярополова Светлана<small>05.05 · ЗП Фехтел Вероника · Сбер</small></div>
+          <div class="pv">14 303 ₽</div>
+        </div>
+        <div class="pending-item">
+          <div class="pl">ООО «ЧОП «Русич»<small>13.05 · охрана Бардина · Сбер</small></div>
+          <div class="pv">3 320 ₽</div>
+        </div>
+        <div class="pending-item">
+          <div class="pl">ООО «ЭКОТЕК»<small>13.05 · ТКО 04/2026 · Сбер</small></div>
+          <div class="pv">3 238 ₽</div>
+        </div>
+        <div class="pending-item">
+          <div class="pl">ООО «Т2 Мобайл»<small>13.05 · связь · Сбер</small></div>
+          <div class="pv">1 955 ₽</div>
+        </div>
+        <div class="pending-item">
+          <div class="pl">ОСФР Кемерово<small>12.05 · взносы 04/2026 · Сбер</small></div>
+          <div class="pv">692 ₽</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- =============================== -->
+  <!-- ПРОДАЖИ -->
+  <!-- =============================== -->
+  <div class="pane" id="pane-sales">
+
+    <div class="card">
+      <h2>Сегодня · 16.05 (сб)</h2>
+      <div class="kpi-grid">
+        <div class="kpi">
+          <div class="l">Валовая прибыль</div>
+          <div class="v" style="color:var(--green)">42 619 ₽</div>
+          <div class="d" style="color:var(--muted)">маржа 58,1%</div>
+        </div>
+        <div class="kpi">
+          <div class="l">Выручка по продажам</div>
+          <div class="v">73 406 ₽</div>
+          <div class="d" style="color:var(--muted)">54 позиции</div>
+        </div>
+        <div class="kpi">
+          <div class="l">Касса дня</div>
+          <div class="v">62 680 ₽</div>
+          <div class="d" style="color:var(--muted)">21 чек</div>
+        </div>
+        <div class="kpi">
+          <div class="l">Возвраты</div>
+          <div class="v" style="color:var(--green)">0 ₽</div>
+          <div class="d" style="color:var(--muted)">—</div>
+        </div>
+      </div>
+      <div class="sub-line" style="margin-top:10px">короткий субботний день · в 3 раза ниже среднего</div>
+    </div>
+
+    <!-- ОЧКИ — НОВОЕ: пары, не отдельно оправы+линзы -->
+    <div class="card">
+      <div class="sec-title">
+        <h3>👓 Очки</h3>
+        <small>~7 пар · 42 336 ₽</small>
+      </div>
+
+      <div class="glasses-note">
+        💡 <b>1 пара очков = 1 оправа + 2 линзы.</b>
+        За день продано 7 оправ и 16 линз → это <b>~7 готовых пар + 2 одиночные линзы</b> (замена в старую оправу).
+      </div>
+
+      <div class="glasses-grid">
+        <div class="cell"><div class="v">7</div><div class="l">пар очков</div></div>
+        <div class="cell"><div class="v">7</div><div class="l">оправ</div></div>
+        <div class="cell"><div class="v">16</div><div class="l">линз</div></div>
+      </div>
+
+      <div class="sales-list" style="margin-top:14px">
+        <div class="item">
+          <div class="lbl"><div class="ic">Б</div><span>Бардина</span><span class="qty">5 пар · 5 опр + 12 линз</span></div>
+          <div class="v">27 876 ₽</div>
+        </div>
+        <div class="item">
+          <div class="lbl"><div class="ic">Д</div><span>Дружбы</span><span class="qty">2 пары · 2 опр + 4 линзы</span></div>
+          <div class="v">14 460 ₽</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title">
+        <h3>👁 Контактные линзы (МКЛ)</h3>
+        <small>9 уп · 18 450 ₽</small>
+      </div>
+      <div class="sales-list">
+        <div class="item">
+          <div class="lbl"><div class="ic">Б</div><span>Бардина</span><span class="qty">3 уп</span></div>
+          <div class="v">6 000 ₽</div>
+        </div>
+        <div class="item">
+          <div class="lbl"><div class="ic">Д</div><span>Дружбы</span><span class="qty">6 уп</span></div>
+          <div class="v">12 450 ₽</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title">
+        <h3>🩺 Услуги клиники</h3>
+        <small>18 шт · 11 300 ₽</small>
+      </div>
+      <div class="sales-list">
+        <div class="item"><div class="lbl"><div class="ic">И</div><span>Изготовление очков</span><span class="qty">8 шт</span></div><div class="v">5 500 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">К</div><span>Консультация офт.</span><span class="qty">1 шт</span></div><div class="v">2 200 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">О</div><span>ОКТ</span><span class="qty">1 шт</span></div><div class="v">1 500 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">П</div><span>Периметрия</span><span class="qty">2 шт</span></div><div class="v">1 200 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">Т</div><span>ТО очков большое</span><span class="qty">1 шт</span></div><div class="v">500 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">М</div><span>Маклаков (ВГД)</span><span class="qty">1 шт</span></div><div class="v">400 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">+</div><span>Бесплатные (подбор/контроль)</span><span class="qty">4 шт</span></div><div class="v" style="color:var(--muted)">0 ₽</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title">
+        <h3>📦 Прочее</h3>
+        <small>4 шт · 1 320 ₽</small>
+      </div>
+      <div class="sales-list">
+        <div class="item"><div class="lbl"><div class="ic">А</div><span>Аксессуары</span><span class="qty">4 шт</span></div><div class="v">1 320 ₽</div></div>
+      </div>
+    </div>
+
+    <!-- НОВОЕ: АРХИВ — предыдущий день -->
+    <div class="card">
+      <h2>📁 Архив · предыдущие дни</h2>
+      <div class="arch-day">
+        <div class="head">
+          <div class="d">14.05.2026, чт</div>
+          <div class="b">156 197 ₽ <span style="font-size:11px;color:var(--muted);font-weight:normal">прибыль</span></div>
+        </div>
+        <div class="grid">
+          <div class="it"><span class="v">9</span><span class="l">пар очков</span></div>
+          <div class="it"><span class="v">8</span><span class="l">МКЛ</span></div>
+          <div class="it"><span class="v">69</span><span class="l">услуг</span></div>
+          <div class="it"><span class="v">207 668</span><span class="l">выручка</span></div>
+          <div class="it"><span class="v">149 070</span><span class="l">касса</span></div>
+          <div class="it"><span class="v">75%</span><span class="l">маржа</span></div>
+        </div>
+      </div>
+      <div class="sub-line" style="text-align:center;margin-top:10px">15.05 — короткий пятничный день, прибыль ~83 К</div>
+    </div>
+
+    <!-- НОВОЕ: ГРАФИК ЗА МЕСЯЦ -->
+    <div class="card">
+      <h2>📈 Выручка и прибыль · Май 2026</h2>
+
+      <div class="chart-legend">
+        <span><span class="dot" style="background:#60a5fa"></span>выручка</span>
+        <span><span class="dot" style="background:#22c55e"></span>прибыль</span>
+      </div>
+
+      <div class="chart-wrap">
+        <!-- SVG-график на 16 дней. viewBox 320x140, mobile-friendly -->
+        <svg viewBox="0 0 320 160" width="100%" preserveAspectRatio="none" style="display:block">
+          <!-- сетка -->
+          <line x1="0" y1="40" x2="320" y2="40" stroke="#22304d" stroke-width="0.5" stroke-dasharray="2,3"/>
+          <line x1="0" y1="80" x2="320" y2="80" stroke="#22304d" stroke-width="0.5" stroke-dasharray="2,3"/>
+          <line x1="0" y1="120" x2="320" y2="120" stroke="#22304d" stroke-width="0.5" stroke-dasharray="2,3"/>
+
+          <!-- 16 дней, выручка (синие столбики) -->
+          <!-- Максимум выручки 196668. Высота столбика = (val/200000) * 120 -->
+          <!-- Шаг по x = 320/16 = 20. ширина столбика ~7. центр = i*20 + 6 -->
+
+          <!-- 01.05 rev=62492 -->
+          <rect x="3"   y="82" width="7" height="38" fill="#60a5fa" rx="1"/>
+          <!-- 02.05 rev=92856 -->
+          <rect x="23"  y="64" width="7" height="56" fill="#60a5fa" rx="1"/>
+          <!-- 03.05 rev=124301 -->
+          <rect x="43"  y="45" width="7" height="75" fill="#60a5fa" rx="1"/>
+          <!-- 04.05 rev=181601 -->
+          <rect x="63"  y="11" width="7" height="109" fill="#60a5fa" rx="1"/>
+          <!-- 05.05 rev=181177 -->
+          <rect x="83"  y="11" width="7" height="109" fill="#60a5fa" rx="1"/>
+          <!-- 06.05 rev=184816 -->
+          <rect x="103" y="9"  width="7" height="111" fill="#60a5fa" rx="1"/>
+          <!-- 07.05 rev=169207 -->
+          <rect x="123" y="18" width="7" height="102" fill="#60a5fa" rx="1"/>
+          <!-- 08.05 rev=155024 -->
+          <rect x="143" y="27" width="7" height="93" fill="#60a5fa" rx="1"/>
+          <!-- 09.05 rev=60706 -->
+          <rect x="163" y="83" width="7" height="37" fill="#60a5fa" rx="1"/>
+          <!-- 10.05 rev=38092 -->
+          <rect x="183" y="97" width="7" height="23" fill="#60a5fa" rx="1"/>
+          <!-- 11.05 rev=196668 -->
+          <rect x="203" y="2"  width="7" height="118" fill="#60a5fa" rx="1"/>
+          <!-- 12.05 rev=185709 -->
+          <rect x="223" y="9"  width="7" height="111" fill="#60a5fa" rx="1"/>
+          <!-- 13.05 rev=154769 -->
+          <rect x="243" y="27" width="7" height="93" fill="#60a5fa" rx="1"/>
+          <!-- 14.05 rev=147620 -->
+          <rect x="263" y="32" width="7" height="88" fill="#60a5fa" rx="1"/>
+          <!-- 15.05 rev=142697 -->
+          <rect x="283" y="35" width="7" height="85" fill="#60a5fa" rx="1"/>
+          <!-- 16.05 rev=64880 -->
+          <rect x="303" y="81" width="7" height="39" fill="#60a5fa" rx="1"/>
+
+          <!-- Линия прибыли (зелёная) -->
+          <!-- Максимум прибыли 156197 (14.05). Высота точки = (val/160000)*120 -->
+          <!-- Для линии возьмём прибыль/2 для масштаба сопоставимого с выручкой -->
+          <polyline points="
+            6,98
+            26,87
+            46,77
+            66,57
+            86,57
+            106,56
+            126,61
+            146,66
+            166,99
+            186,107
+            206,53
+            226,55
+            246,67
+            266,2
+            286,70
+            306,95"
+            fill="none" stroke="#22c55e" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+
+          <!-- Точки на линии прибыли -->
+          <g fill="#22c55e">
+            <circle cx="6"   cy="98" r="2"/>
+            <circle cx="26"  cy="87" r="2"/>
+            <circle cx="46"  cy="77" r="2"/>
+            <circle cx="66"  cy="57" r="2"/>
+            <circle cx="86"  cy="57" r="2"/>
+            <circle cx="106" cy="56" r="2"/>
+            <circle cx="126" cy="61" r="2"/>
+            <circle cx="146" cy="66" r="2"/>
+            <circle cx="166" cy="99" r="2"/>
+            <circle cx="186" cy="107" r="2"/>
+            <circle cx="206" cy="53" r="2"/>
+            <circle cx="226" cy="55" r="2"/>
+            <circle cx="246" cy="67" r="2"/>
+            <circle cx="266" cy="2" r="3" fill="#a78bfa"/>
+            <circle cx="286" cy="70" r="2"/>
+            <circle cx="306" cy="95" r="2"/>
+          </g>
+
+          <!-- Подписи дат на оси Х (через 3 дня) -->
+          <text x="6"   y="155" font-size="8" fill="#9aa7bd" text-anchor="middle">01</text>
+          <text x="86"  y="155" font-size="8" fill="#9aa7bd" text-anchor="middle">05</text>
+          <text x="166" y="155" font-size="8" fill="#9aa7bd" text-anchor="middle">09</text>
+          <text x="246" y="155" font-size="8" fill="#9aa7bd" text-anchor="middle">13</text>
+          <text x="306" y="155" font-size="8" fill="#a78bfa" text-anchor="middle" font-weight="bold">16</text>
+        </svg>
+      </div>
+
+      <div class="chart-totals">
+        <div class="cell">
+          <div class="l">Выручка за 16 дней</div>
+          <div class="v">2 142 615<span class="cur"> ₽</span></div>
+        </div>
+        <div class="cell">
+          <div class="l">Прибыль за 16 дней</div>
+          <div class="v" style="color:var(--green)">1 722 635<span class="cur"> ₽</span></div>
+        </div>
+        <div class="cell">
+          <div class="l">Средняя выручка/день</div>
+          <div class="v">133 913<span class="cur"> ₽</span></div>
+        </div>
+        <div class="cell">
+          <div class="l">Средняя маржа</div>
+          <div class="v">66,6%</div>
+        </div>
+      </div>
+
+      <div class="sub-line" style="margin-top:10px">пик 11.05 (197К) после праздничного спада 09–10.05 · выходные традиционно слабее</div>
+    </div>
+
+  </div>
+
+  <div class="footer">Doctor Optic · 16.05.2026 · Дашборд v1.2</div>
 </div>
 
 <script>
-  // Простой парольный гейт. PIN хранится в коде клиента — это НЕ безопасность,
-  // а удобство ("не заходи случайно"). Реальная защита — приватный репозиторий.
-  const PIN = '1406';
-  let buf = '';
-  const dots = [0,1,2,3].map(i => document.getElementById('d'+i));
-  const err  = document.getElementById('err');
-
-  function render(){
-    dots.forEach((d,i) => {
-      d.classList.toggle('on', i < buf.length);
-      d.classList.remove('err');
-    });
-  }
-  function shake(){
-    dots.forEach(d => d.classList.add('err'));
-    err.classList.add('show');
-    setTimeout(() => {
-      err.classList.remove('show');
-      buf = '';
-      render();
-    }, 700);
-  }
-  function check(){
-    if (buf === PIN){
-      // 12 часов сессии — потом снова PIN
-      const exp = Date.now() + 12*60*60*1000;
-      sessionStorage.setItem('do_auth_exp', exp);
-      location.href = 'dashboard.html';
-    } else {
-      shake();
-    }
-  }
-
-  document.querySelectorAll('.key[data-k]').forEach(b => {
-    b.addEventListener('click', () => {
-      if (buf.length >= 4) return;
-      buf += b.dataset.k;
-      render();
-      if (buf.length === 4) setTimeout(check, 100);
-    });
-  });
-  document.getElementById('del').addEventListener('click', () => {
-    buf = buf.slice(0,-1); render();
-  });
-  document.getElementById('clr').addEventListener('click', () => {
-    buf = ''; render();
-  });
-
-  // На случай, если открыто на компьютере — клавиатура тоже работает
-  document.addEventListener('keydown', e => {
-    if (/^[0-9]$/.test(e.key) && buf.length < 4){
-      buf += e.key; render();
-      if (buf.length === 4) setTimeout(check, 100);
-    } else if (e.key === 'Backspace'){
-      buf = buf.slice(0,-1); render();
-    } else if (e.key === 'Enter' && buf.length === 4){
-      check();
-    }
-  });
+  const tabs = document.querySelectorAll('.nav button');
+  const panes = {money:'pane-money', debt:'pane-debt', sales:'pane-sales'};
+  tabs.forEach(b => b.addEventListener('click', () => {
+    tabs.forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    Object.values(panes).forEach(id => document.getElementById(id).classList.remove('on'));
+    document.getElementById(panes[b.dataset.tab]).classList.add('on');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }));
 </script>
 </body>
 </html>
