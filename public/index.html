@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1220">
-<title>Doctor Optic — 17.05.2026</title>
+<title>Doctor Optic — 18.05.2026</title>
 <style>
   :root{
     --bg:#0b1220; --bg2:#111a2e; --card:#16213a; --card2:#1c2a48; --line:#22304d;
@@ -21,20 +21,39 @@
     padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
   .wrap{max-width:440px;margin:0 auto;padding:14px 14px 80px;display:none}
   .wrap.authenticated{display:block}
+  .login-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999}
+  .login-screen.hidden{display:none}
+  .login-box{text-align:center;max-width:300px}
+  .login-box h1{margin:0 0 20px;font-size:28px;font-weight:700;color:var(--text)}
+  .login-box p{color:var(--muted);font-size:14px;margin-bottom:40px}
+  .pin-display{height:50px;display:flex;align-items:center;justify-content:center;
+    margin-bottom:30px;font-size:40px;letter-spacing:8px;font-weight:700;color:var(--accent);
+    font-variant-numeric:tabular-nums}
+  .pin-display.empty{color:var(--muted);font-size:24px;letter-spacing:normal}
+  .keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px;width:100%;max-width:240px}
+  .keypad button{background:var(--card);border:1px solid var(--line);color:var(--text);
+    font-size:18px;font-weight:600;padding:16px;border-radius:12px;cursor:pointer;
+    transition:all 200ms;active:scale(0.95)}
+  .keypad button:hover{background:var(--card2);border-color:var(--accent)}
+  .keypad button:active{transform:scale(0.95)}
+  .keypad button.clear{grid-column:1;background:var(--red-bg);color:var(--red)}
+  .keypad button.clear:hover{background:rgba(239,68,68,.2)}
+  .keypad button.submit{grid-column:2/4;background:var(--green-bg);color:var(--green)}
+  .keypad button.submit:hover{background:rgba(34,197,94,.2)}
+  .keypad button.submit:disabled{opacity:0.5;cursor:not-allowed}
   .hdr{display:flex;align-items:center;gap:10px;padding:6px 4px 14px}
-  .hdr .logo{width:34px;height:34px;border-radius:10px;
-    background:linear-gradient(135deg,#3b82f6,#a78bfa);
+  .hdr .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#3b82f6,#a78bfa);
     display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:#fff}
-  .hdr .title{font-weight:700;font-size:16px;letter-spacing:.2px}
+  .hdr .title{font-weight:700;font-size:16px}
   .hdr .sub{color:var(--muted);font-size:12px;margin-top:2px}
   .hdr .right{margin-left:auto;text-align:right}
   .stoplight{display:inline-flex;align-items:center;gap:6px;font-size:12px;
     padding:5px 9px;border-radius:999px;background:var(--amber-bg);color:var(--amber);font-weight:600}
+  .stoplight.green{background:var(--green-bg);color:var(--green)}
   .stoplight .dot{width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;
-    padding:14px;margin-bottom:12px;position:relative;overflow:hidden}
-  .card h2{margin:0 0 10px;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;
-    color:var(--muted);font-weight:600;display:flex;align-items:center;gap:8px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;overflow:hidden}
+  .card h2{margin:0 0 10px;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:8px}
   .card h2 .badge{font-size:10px;padding:2px 7px;border-radius:999px;letter-spacing:.5px;text-transform:none}
   .badge.red{background:var(--red-bg);color:var(--red)}
   .badge.amber{background:var(--amber-bg);color:var(--amber)}
@@ -42,8 +61,7 @@
   .big{font-size:30px;font-weight:700;letter-spacing:-.5px;line-height:1.05}
   .big .cur{font-size:18px;color:var(--muted);margin-left:4px;font-weight:500}
   .sub-line{color:var(--muted);font-size:12px;margin-top:2px}
-  .row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;
-    border-top:1px dashed var(--line)}
+  .row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-top:1px dashed var(--line)}
   .row:first-of-type{border-top:0}
   .row .lbl{color:var(--muted);font-size:13px}
   .row .val{font-variant-numeric:tabular-nums;font-weight:600;font-size:14px}
@@ -55,52 +73,41 @@
   .od-cell .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
   .od-cell .v{font-size:18px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
   .bar{height:8px;background:var(--bg2);border-radius:99px;overflow:hidden;margin-top:10px}
-  .bar > i{display:block;height:100%;border-radius:99px;
-    background:linear-gradient(90deg,#22c55e,#eab308 60%,#ef4444 90%)}
+  .bar > i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#22c55e,#eab308 60%,#ef4444 90%)}
   .bar-cap{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:6px}
   .loan{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:10px 0;border-top:1px solid var(--line)}
   .loan:first-of-type{border-top:0}
   .loan .name{font-weight:600;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-  .loan .name .pill{font-size:10px;padding:2px 6px;border-radius:999px;
-    background:var(--bg2);color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+  .loan .name .pill{font-size:10px;padding:2px 6px;border-radius:999px;background:var(--bg2);color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
   .loan .pay{font-variant-numeric:tabular-nums;font-weight:700;text-align:right}
   .loan .ost{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
   .loan .dt{color:var(--muted);font-size:12px;text-align:right;font-variant-numeric:tabular-nums}
   .loan .end{color:var(--purple);font-size:11px;font-weight:600;margin-left:6px}
-  .loan.priority{background:var(--red-bg);margin:6px -14px;padding:10px 14px;
-    border-radius:10px;border-top:0;box-shadow:inset 3px 0 0 var(--red)}
+  .loan.priority{background:var(--red-bg);margin:6px -14px;padding:10px 14px;border-radius:10px;border-top:0;box-shadow:inset 3px 0 0 var(--red)}
   .loan.priority .name{color:var(--red)}
-  .loan.warning{background:var(--amber-bg);margin:6px -14px;padding:10px 14px;
-    border-radius:10px;border-top:0;box-shadow:inset 3px 0 0 var(--amber)}
+  .loan.warning{background:var(--amber-bg);margin:6px -14px;padding:10px 14px;border-radius:10px;border-top:0;box-shadow:inset 3px 0 0 var(--amber)}
   .loan.warning .name{color:var(--amber)}
-  .loan.paid{background:var(--green-bg);margin:6px -14px;padding:10px 14px;
-    border-radius:10px;border-top:0;box-shadow:inset 3px 0 0 var(--green)}
-  .loan.paid .name{color:var(--green)}
-  .loan.paid .pay{color:var(--green)}
+  .loan.paid{background:var(--green-bg);margin:6px -14px;padding:10px 14px;border-radius:10px;border-top:0;box-shadow:inset 3px 0 0 var(--green)}
+  .loan.paid .name{color:var(--green)} .loan.paid .pay{color:var(--green)}
   .loan.frozen{opacity:.55}
   .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
   .kpi{background:var(--card2);border-radius:12px;padding:12px}
   .kpi .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
   .kpi .v{font-size:20px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
   .kpi .d{font-size:11px;margin-top:2px;font-variant-numeric:tabular-nums}
-  .sales-list .item{display:flex;justify-content:space-between;align-items:center;
-    padding:8px 0;border-top:1px dashed var(--line)}
+  .sales-list .item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px dashed var(--line)}
   .sales-list .item:first-child{border-top:0}
   .sales-list .lbl{display:flex;align-items:center;gap:8px}
-  .sales-list .ic{width:26px;height:26px;border-radius:8px;background:var(--card2);
-    display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--accent)}
+  .sales-list .ic{width:26px;height:26px;border-radius:8px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--accent)}
   .sales-list .qty{color:var(--muted);font-size:12px;margin-left:6px}
   .sales-list .v{font-variant-numeric:tabular-nums;font-weight:600;font-size:14px}
   .sec-title{display:flex;justify-content:space-between;align-items:center;margin:4px 0 8px}
   .sec-title h3{margin:0;font-size:13px;font-weight:600;color:var(--text)}
   .sec-title small{color:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
   .footer{color:var(--muted);font-size:11px;text-align:center;padding:14px 4px 0}
-  .nav{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;
-    background:rgba(22,33,58,.85);backdrop-filter:blur(14px);
-    border:1px solid var(--line);border-radius:999px;padding:6px;display:flex;gap:4px;
-    box-shadow:0 8px 30px rgba(0,0,0,.4);z-index:50}
-  .nav button{background:transparent;color:var(--muted);border:0;padding:8px 14px;
-    border-radius:999px;font-size:12px;font-weight:600;cursor:pointer;letter-spacing:.3px}
+  .nav{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;background:rgba(22,33,58,.85);backdrop-filter:blur(14px);
+    border:1px solid var(--line);border-radius:999px;padding:6px;display:flex;gap:4px;box-shadow:0 8px 30px rgba(0,0,0,.4);z-index:50}
+  .nav button{background:transparent;color:var(--muted);border:0;padding:8px 14px;border-radius:999px;font-size:12px;font-weight:600;cursor:pointer}
   .nav button.on{background:var(--accent);color:#0b1220}
   .pane{display:none} .pane.on{display:block}
   .margin-split{background:var(--card2);border-radius:12px;padding:12px;margin-top:8px}
@@ -108,11 +115,10 @@
   .margin-split .row-split{display:grid;grid-template-columns:90px 1fr auto;gap:10px;align-items:baseline;padding:6px 0;border-top:1px dashed var(--line)}
   .margin-split .row-split:first-of-type{border-top:0}
   .margin-split .name{font-weight:600;font-size:13px}
-  .margin-split .bar-mini{height:6px;background:var(--bg);border-radius:99px;overflow:hidden;position:relative}
+  .margin-split .bar-mini{height:6px;background:var(--bg);border-radius:99px;overflow:hidden}
   .margin-split .bar-mini > i{display:block;height:100%;border-radius:99px}
   .margin-split .v{font-variant-numeric:tabular-nums;font-weight:700;font-size:13px;text-align:right;white-space:nowrap}
-  .glasses-note{background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.25);
-    border-radius:10px;padding:10px;margin-bottom:10px;font-size:12px;color:var(--text)}
+  .glasses-note{background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.25);border-radius:10px;padding:10px;margin-bottom:10px;font-size:12px}
   .glasses-note b{color:var(--accent)}
   .glasses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
   .glasses-grid .cell{background:var(--card2);border-radius:10px;padding:10px;text-align:center}
@@ -122,11 +128,13 @@
   .arch-day .head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
   .arch-day .head .d{font-size:13px;color:var(--muted);font-weight:600}
   .arch-day .head .b{font-size:18px;font-weight:700;color:var(--green);font-variant-numeric:tabular-nums}
-  .arch-day .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;font-size:11px}
+  .arch-day .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
   .arch-day .grid .it{text-align:center;padding:6px 4px;background:var(--bg);border-radius:8px}
   .arch-day .grid .it .v{font-size:14px;font-weight:700;display:block;font-variant-numeric:tabular-nums}
   .arch-day .grid .it .l{color:var(--muted);font-size:10px;margin-top:2px}
-  .chart-wrap{margin-top:8px}
+  .alert-red{background:linear-gradient(135deg,rgba(239,68,68,.18),rgba(239,68,68,.06));
+    border:1px solid rgba(239,68,68,.35);border-radius:10px;padding:10px;margin-top:10px;font-size:12px;color:#fecaca}
+  .alert-red b{color:#fff}
   .chart-legend{display:flex;gap:14px;font-size:11px;color:var(--muted);margin-bottom:8px}
   .chart-legend .dot{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;vertical-align:middle}
   .chart-totals{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
@@ -134,91 +142,50 @@
   .chart-totals .l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
   .chart-totals .v{font-size:16px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
   .chart-totals .v .cur{font-size:12px;color:var(--muted)}
-  .pending-item{display:flex;justify-content:space-between;align-items:flex-start;
-    padding:10px 0;border-top:1px dashed var(--line);gap:10px}
+  .pending-item{display:flex;justify-content:space-between;padding:10px 0;border-top:1px dashed var(--line);gap:10px}
   .pending-item:first-of-type{border-top:0}
   .pending-item .pl{font-size:13px;color:var(--text);flex:1}
   .pending-item .pl small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
   .pending-item .pv{font-variant-numeric:tabular-nums;font-weight:600;font-size:14px;text-align:right;white-space:nowrap}
   .pending-section{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
-  .pending-section .sec-h{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;
-    margin-bottom:6px;display:flex;justify-content:space-between;align-items:baseline}
+  .pending-section .sec-h{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;display:flex;justify-content:space-between}
   .pending-section .sec-h .sum{color:var(--amber);font-weight:700;font-variant-numeric:tabular-nums;text-transform:none;font-size:13px}
-
-  /* PIN Login */
-  .login-screen{position:fixed;top:0;left:0;width:100%;height:100%;
-    background:var(--bg);display:flex;align-items:center;justify-content:center;
-    z-index:9999;opacity:1;visibility:visible;transition:opacity 0.3s,visibility 0.3s}
-  .login-screen.hidden{opacity:0;visibility:hidden}
-  .login-modal{background:var(--card);border:1px solid var(--line);
-    border-radius:24px;padding:40px 24px;width:100%;max-width:340px;text-align:center}
-  .login-modal h1{margin:0 0 4px;font-size:32px;color:var(--text);font-weight:700;
-    background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;background-clip:text}
-  .login-modal .subtitle{color:var(--muted);font-size:14px;margin-bottom:28px;font-weight:500}
-  .pin-display{width:100%;padding:16px;background:var(--bg2);border:1px solid var(--line);
-    border-radius:14px;margin-bottom:24px;font-size:28px;letter-spacing:8px;
-    color:var(--text);font-weight:700;font-variant-numeric:tabular-nums;min-height:54px;
-    display:flex;align-items:center;justify-content:center}
-  .pin-display.error{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.25);color:var(--red)}
-  .pin-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
-  .pin-key{padding:14px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;
-    color:var(--text);font-size:18px;font-weight:600;cursor:pointer;
-    transition:all 0.15s;user-select:none}
-  .pin-key:hover{background:var(--accent);color:#0b1220;transform:scale(1.05)}
-  .pin-key:active{transform:scale(0.95)}
-  .pin-actions{display:grid;grid-template-columns:1fr 2fr;gap:8px}
-  .pin-del{padding:14px;background:var(--red-bg);border:1px solid rgba(239,68,68,.3);
-    border-radius:12px;color:var(--red);font-weight:600;cursor:pointer;
-    transition:all 0.15s}
-  .pin-del:hover{background:var(--red);color:#fff}
-  .pin-del:active{transform:scale(0.95)}
-  .pin-ok{padding:14px;background:var(--green-bg);border:1px solid rgba(34,197,94,.3);
-    border-radius:12px;color:var(--green);font-weight:600;cursor:pointer;
-    transition:all 0.15s}
-  .pin-ok:hover{background:var(--green);color:#0b1220}
-  .pin-ok:active{transform:scale(0.95)}
-  .login-error{color:var(--red);font-size:12px;margin-top:12px;min-height:16px}
 </style>
 </head>
 <body>
-<div class="login-screen" id="loginScreen">
-  <div class="login-modal">
+
+<div class="login-screen" id="login">
+  <div class="login-box">
     <h1>Doctor Optic</h1>
-    <div class="subtitle"></div>
-    <div class="pin-display" id="pinDisplay">••••</div>
-    <div class="pin-keypad">
-      <div class="pin-key" onclick="addPin('1')">1</div>
-      <div class="pin-key" onclick="addPin('2')">2</div>
-      <div class="pin-key" onclick="addPin('3')">3</div>
-      <div class="pin-key" onclick="addPin('4')">4</div>
-      <div class="pin-key" onclick="addPin('5')">5</div>
-      <div class="pin-key" onclick="addPin('6')">6</div>
-      <div class="pin-key" onclick="addPin('7')">7</div>
-      <div class="pin-key" onclick="addPin('8')">8</div>
-      <div class="pin-key" onclick="addPin('9')">9</div>
+    <p>PIN: 1406</p>
+    <div class="pin-display empty" id="pin-display">----</div>
+    <div class="keypad">
+      <button onclick="addPin('1')">1</button>
+      <button onclick="addPin('2')">2</button>
+      <button onclick="addPin('3')">3</button>
+      <button onclick="addPin('4')">4</button>
+      <button onclick="addPin('5')">5</button>
+      <button onclick="addPin('6')">6</button>
+      <button onclick="addPin('7')">7</button>
+      <button onclick="addPin('8')">8</button>
+      <button onclick="addPin('9')">9</button>
+      <button onclick="delPin()" class="clear">DEL</button>
+      <button onclick="addPin('0')">0</button>
+      <button onclick="checkPin()" class="submit">OK</button>
     </div>
-    <div class="pin-actions">
-      <div class="pin-del" onclick="delPin()">Очистить</div>
-      <div class="pin-key" onclick="addPin('0')" style="grid-column:span 2">0</div>
-    </div>
-    <button onclick="checkPin()" style="width:100%;padding:12px;margin-top:16px;border:0;
-      border-radius:10px;background:var(--accent);color:#0b1220;font-weight:700;
-      font-size:14px;cursor:pointer;transition:opacity 0.2s">Войти</button>
-    <div class="login-error" id="loginError"></div>
   </div>
 </div>
 
-<div class="wrap" id="appContent">
+<div class="wrap" id="content">
 
   <div class="hdr">
     <div class="logo">ДО</div>
     <div>
       <div class="title">Doctor Optic</div>
-      <div class="sub">17.05.2026, вс · обновлено 23:50</div>
+      <div class="sub">18.05.2026, пн · обновлено 23:50</div>
     </div>
     <div class="right">
-      <span class="stoplight"><span class="dot"></span>Овердрафт 82%</span>
+      <span class="stoplight green"><span class="dot"></span>Овердрафт 77%</span>
     </div>
   </div>
 
@@ -232,68 +199,69 @@
   <div class="pane on" id="pane-money">
     <div class="card">
       <h2>Деньги сейчас <span class="badge green">Ликвидность OK</span></h2>
-      <div class="big">1 129 101<span class="cur">₽</span></div>
-      <div class="sub-line">сумма на собственных счетах · <span class="delta-good">▲ +3 086 ₽ vs 16.05</span></div>
+      <div class="big">1 211 365<span class="cur">₽</span></div>
+      <div class="sub-line">сумма на собственных счетах · <span class="delta-good">▲ +82 264 ₽ vs 17.05</span></div>
 
-      <div class="row"><span class="lbl">Р/с Сбер ООО</span><span class="val">474 869 ₽</span></div>
-      <div class="row"><span class="lbl">Депозит ИН</span><span class="val">388 600 ₽</span></div>
-      <div class="row"><span class="lbl">Сейф</span><span class="val">102 600 ₽</span></div>
+      <div class="row"><span class="lbl">Р/с Сбер ООО</span><span class="val">486 578 ₽</span></div>
+      <div class="row"><span class="lbl">Депозит ИН</span><span class="val">386 605 ₽</span></div>
+      <div class="row"><span class="lbl">Сейф</span><span class="val">159 100 ₽</span></div>
       <div class="row"><span class="lbl">Заначка ИН</span><span class="val">95 209 ₽</span></div>
-      <div class="row"><span class="lbl">Касса Дружбы</span><span class="val">34 644 ₽</span></div>
-      <div class="row"><span class="lbl">Касса Бардина</span><span class="val">33 180 ₽</span></div>
+      <div class="row"><span class="lbl">Касса Дружбы</span><span class="val">45 856 ₽</span></div>
+      <div class="row"><span class="lbl">Касса Бардина</span><span class="val">21 030 ₽</span></div>
+      <div class="row"><span class="lbl">Одуван (хоз)</span><span class="val">16 988 ₽</span></div>
     </div>
 
     <div class="card">
-      <h2>Овердрафт КББ <span class="badge amber">82%</span></h2>
+      <h2>Овердрафт КББ <span class="badge green">77%</span></h2>
       <div class="od-grid">
         <div class="od-cell">
           <div class="l">Использовано</div>
-          <div class="v">1 232 513 ₽</div>
+          <div class="v">1 147 501 ₽</div>
         </div>
         <div class="od-cell">
           <div class="l">Запас (свободно)</div>
-          <div class="v" style="color:var(--amber)">267 487 ₽</div>
+          <div class="v" style="color:var(--green)">352 499 ₽</div>
         </div>
       </div>
-      <div class="bar"><i style="width:82%"></i></div>
+      <div class="bar"><i style="width:77%"></i></div>
       <div class="bar-cap"><span>0</span><span>лимит 1 500 000 ₽</span></div>
 
       <div class="row" style="margin-top:8px"><span class="lbl">Дата гашения овердрафта</span><span class="val" style="color:var(--red)">15.06.2026</span></div>
       <div class="row"><span class="lbl">Проценты в месяц</span><span class="val">~35 000 ₽</span></div>
-      <div class="row"><span class="lbl">Изменение vs 16.05</span><span class="val delta-bad">▲ +4 134 ₽ за день</span></div>
+      <div class="row"><span class="lbl">Изменение vs 17.05</span><span class="val delta-good">▼ −85 012 ₽ за день 👍</span></div>
     </div>
 
     <div class="card">
       <h2>Товарка</h2>
       <div class="row">
         <span class="lbl">Невыданные заказы · доплата клиентов
-          <small>109 заказов · 4 старше 30 дн.</small>
+          <small>112 заказов · 4 старше 30 дн.</small>
         </span>
-        <span class="val" style="color:var(--green)">+ 323 592 ₽</span>
+        <span class="val" style="color:var(--green)">+ 323 570 ₽</span>
       </div>
-      <div class="row"><span class="lbl">Склад · закупочная стоимость</span><span class="val">3 250 704 ₽</span></div>
-      <div class="row"><span class="lbl">Склад · розничная стоимость</span><span class="val">12 100 884 ₽</span></div>
+      <div class="row"><span class="lbl">Склад · закупочная</span><span class="val">3 212 292 ₽</span></div>
+      <div class="row"><span class="lbl">Склад · розничная</span><span class="val">11 996 464 ₽</span></div>
       <div class="row"><span class="lbl">Задолженность поставщикам</span><span class="val" style="color:var(--amber)">~1 288 029 ₽</span></div>
     </div>
 
     <div class="card">
       <h2>Платежи · платёжный календарь</h2>
-      <div class="row"><span class="lbl">Ближайшие 7 дней (18–24.05)</span><span class="val" style="color:var(--amber)">~225 000 ₽</span></div>
-      <div class="row"><span class="lbl">Ближайшие 14 дней (18–31.05)</span><span class="val">~520 000 ₽</span></div>
+      <div class="row"><span class="lbl">Ближайшие 7 дней (19–25.05)</span><span class="val" style="color:var(--amber)">~225 000 ₽</span></div>
+      <div class="row"><span class="lbl">Ближайшие 14 дней (19–31.05)</span><span class="val">~520 000 ₽</span></div>
       <div class="sub-line" style="margin-top:6px">факт уже выплаченного (включая Спиридонов) исключён</div>
     </div>
 
     <div class="card">
       <h2>Подготовлены в банке к оплате</h2>
-      <div class="big" style="font-size:24px">~660 000<span class="cur">₽</span></div>
+      <div class="big" style="font-size:24px">~625 000<span class="cur">₽</span></div>
       <div class="sub-line">детализация во вкладке «Долги»</div>
       <div class="row" style="margin-top:8px">
-        <span class="lbl">Будущие (после 17.05)</span>
-        <span class="val" style="color:var(--amber)">35 737 ₽ · 4 платежа</span>
+        <span class="lbl">Будущие (после 18.05)</span>
+        <span class="val" style="color:var(--amber)">30 775 ₽ · 3 платежа</span>
       </div>
       <div class="row">
         <span class="lbl">Прошлые / без даты</span>
-        <span class="val" style="color:var(--muted)">624 909 ₽ · 13 платежей</span>
+        <span class="val" style="color:var(--muted)">594 134 ₽ · 13 платежей</span>
       </div>
     </div>
   </div>
@@ -302,7 +270,7 @@
   <div class="pane" id="pane-debt">
     <div class="card">
       <h2>Кредитный портфель</h2>
-      <div class="big">14 462 897<span class="cur">₽</span></div>
+      <div class="big">14 377 885<span class="cur">₽</span></div>
       <div class="sub-line">10 активных + 1 заморожен · Спиридонов % за май оплачен ✓</div>
       <div class="row"><span class="lbl">Платёж в мае (всего)</span><span class="val">431 390 ₽</span></div>
       <div class="row"><span class="lbl">из них проценты</span><span class="val" style="color:var(--amber)">~240 К · 57%</span></div>
@@ -315,7 +283,7 @@
       <div class="loan priority">
         <div class="name">🔴 КББ Овердрафт <span class="pill">досрочка</span><span class="end">до 06.2026</span></div>
         <div class="pay">35 000 ₽</div>
-        <div class="ost">остаток 1 232 513 ₽ · 22,9% · % only</div>
+        <div class="ost">остаток 1 147 501 ₽ · 22,9% · % only</div>
         <div class="dt">15.06.2026</div>
       </div>
 
@@ -336,7 +304,7 @@
       <div class="loan">
         <div class="name">КББ 3 млн <span class="pill">офис</span><span class="end">до 08.2030</span></div>
         <div class="pay">86 000 ₽</div>
-        <div class="ost">остаток 2 990 000 ₽ · 21,9% · залог Дружбы 31</div>
+        <div class="ost">остаток 2 990 000 ₽ · 21,9%</div>
         <div class="dt">31.05.2026</div>
       </div>
 
@@ -385,25 +353,22 @@
       <div class="loan frozen">
         <div class="name">Павлик <span class="pill">заморожен</span><span class="end">до 05.2027</span></div>
         <div class="pay">0 ₽</div>
-        <div class="ost">остаток 1 200 000 ₽ · 20% · мораторий</div>
+        <div class="ost">остаток 1 200 000 ₽ · 20%</div>
         <div class="dt">—</div>
       </div>
     </div>
 
     <div class="card">
-      <h2>Подготовлены в банке к оплате <span class="badge amber">17 платежей</span></h2>
+      <h2>Подготовлены в банке к оплате <span class="badge amber">16 платежей · ~625 К</span></h2>
+
       <div class="pending-section" style="border-top:0;padding-top:0;margin-top:0">
         <div class="sec-h">
-          <span>🟡 БУДУЩИЕ · 4</span>
-          <span class="sum">35 737 ₽</span>
+          <span>🟡 БУДУЩИЕ · 3</span>
+          <span class="sum">30 775 ₽</span>
         </div>
         <div class="pending-item">
           <div class="pl">ООО «ДубльГИС»<small>25.05 · реклама · Сбер</small></div>
           <div class="pv">28 970 ₽</div>
-        </div>
-        <div class="pending-item">
-          <div class="pl">ООО «ЭНЕРГОТРАНЗИТ»<small>18.05 · электроэнергия · КББ</small></div>
-          <div class="pv">4 962 ₽</div>
         </div>
         <div class="pending-item">
           <div class="pl">ООО «УК «Проспект»<small>25.05 · коммуналка · КББ</small></div>
@@ -418,7 +383,7 @@
       <div class="pending-section">
         <div class="sec-h">
           <span>⚪ ПРОШЛЫЕ / БЕЗ ДАТЫ · 13</span>
-          <span class="sum" style="color:var(--muted)">624 909 ₽</span>
+          <span class="sum" style="color:var(--muted)">594 134 ₽</span>
         </div>
         <div class="sub-line" style="margin-bottom:10px">могут быть уже списаны — сверить с выписками</div>
         <div class="pending-item">
@@ -481,22 +446,22 @@
   <div class="pane" id="pane-sales">
 
     <div class="card">
-      <h2>Сегодня · 17.05 (вс)</h2>
+      <h2>Сегодня · 18.05 (пн)</h2>
       <div class="kpi-grid">
         <div class="kpi">
-          <div class="l">Валовая прибыль (общая)</div>
-          <div class="v" style="color:var(--green)">56 169 ₽</div>
-          <div class="d" style="color:var(--muted)">общая маржа 68,5%</div>
+          <div class="l">Валовая прибыль</div>
+          <div class="v" style="color:var(--green)">102 050 ₽</div>
+          <div class="d" style="color:var(--muted)">общая маржа 66,1%</div>
         </div>
         <div class="kpi">
           <div class="l">Выручка по продажам</div>
-          <div class="v">82 000 ₽</div>
-          <div class="d" style="color:var(--muted)">53 позиции</div>
+          <div class="v">154 404 ₽</div>
+          <div class="d" style="color:var(--muted)">91 позиция</div>
         </div>
         <div class="kpi">
           <div class="l">Касса дня</div>
-          <div class="v">102 565 ₽</div>
-          <div class="d" style="color:var(--muted)">видимо выдачи + доплаты</div>
+          <div class="v">190 972 ₽</div>
+          <div class="d" style="color:var(--muted)">сильный понедельник</div>
         </div>
         <div class="kpi">
           <div class="l">Возвраты</div>
@@ -505,65 +470,65 @@
         </div>
       </div>
 
+      <!-- РАЗДЕЛЕНИЕ МАРЖИ -->
       <div class="margin-split">
-        <div class="title">Валовая прибыль · структура (важно!)</div>
-
+        <div class="title">Валовая прибыль · структура</div>
         <div class="row-split">
           <div class="name" style="color:var(--accent)">📦 Товарка</div>
           <div>
-            <div style="font-size:11px;color:var(--muted);margin-bottom:2px">маржа 44% · 22 шт</div>
-            <div class="bar-mini"><i style="width:44%;background:var(--accent)"></i></div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:2px">маржа 37,7% · 30 шт</div>
+            <div class="bar-mini"><i style="width:38%;background:var(--accent)"></i></div>
           </div>
-          <div class="v" style="color:var(--accent)">20 319 ₽<br><span style="font-size:10px;color:var(--muted);font-weight:400">из 46 150 ₽</span></div>
+          <div class="v" style="color:var(--accent)">31 650 ₽<br><span style="font-size:10px;color:var(--muted);font-weight:400">из 84 004 ₽</span></div>
         </div>
-
         <div class="row-split">
           <div class="name" style="color:var(--green)">🩺 Услуги</div>
           <div>
-            <div style="font-size:11px;color:var(--muted);margin-bottom:2px">маржа 100% · 31 шт</div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:2px">маржа 100% · 61 шт</div>
             <div class="bar-mini"><i style="width:100%;background:var(--green)"></i></div>
           </div>
-          <div class="v" style="color:var(--green)">35 850 ₽<br><span style="font-size:10px;color:var(--muted);font-weight:400">из 35 850 ₽</span></div>
+          <div class="v" style="color:var(--green)">70 400 ₽<br><span style="font-size:10px;color:var(--muted);font-weight:400">из 70 400 ₽</span></div>
         </div>
-
         <div class="row-split" style="border-top:1px solid var(--line);padding-top:8px;margin-top:4px">
           <div class="name">Σ Итого</div>
-          <div style="font-size:11px;color:var(--muted)">смешанная маржа 68,5%</div>
-          <div class="v">56 169 ₽</div>
+          <div style="font-size:11px;color:var(--muted)">смешанная маржа 66,1%</div>
+          <div class="v">102 050 ₽</div>
         </div>
+      </div>
 
-        <div class="sub-line" style="margin-top:8px;font-size:11px">
-          ⚠ Услуги в этот день сильно «вытянули» общую цифру.
-          На реальной товарке маржа в норме (44%), услуги без с/с.
-        </div>
+      <!-- ПРЕДУПРЕЖДЕНИЕ ПО МКЛ -->
+      <div class="alert-red">
+        ⚠ <b>Внимание:</b> МКЛ Бардина продано ниже закупки.
+        Выручка 10 322 ₽ — себестоимость 10 954 ₽ → <b>убыток −632 ₽</b>.
+        Скорее всего — скидка / акция. Проверь ценник у Acuvue.
       </div>
     </div>
 
     <div class="card">
       <div class="sec-title">
         <h3>👓 Очки</h3>
-        <small>2 пары · 24 870 ₽</small>
+        <small>4 пары · 49 242 ₽</small>
       </div>
 
       <div class="glasses-note">
         💡 <b>1 пара очков = 1 оправа + 2 линзы.</b>
-        За день продано 2 оправы и 4 линзы → ровно <b>2 готовые пары</b> (одиночных линз нет).
+        Продано 4 оправы и 8 линз → ровно <b>4 готовые пары</b>.
       </div>
 
       <div class="glasses-grid">
-        <div class="cell"><div class="v">2</div><div class="l">пары очков</div></div>
-        <div class="cell"><div class="v">2</div><div class="l">оправы</div></div>
-        <div class="cell"><div class="v">4</div><div class="l">линзы</div></div>
+        <div class="cell"><div class="v">4</div><div class="l">пары очков</div></div>
+        <div class="cell"><div class="v">4</div><div class="l">оправы</div></div>
+        <div class="cell"><div class="v">8</div><div class="l">линзы</div></div>
       </div>
 
       <div class="sales-list" style="margin-top:14px">
         <div class="item">
-          <div class="lbl"><div class="ic">Б</div><span>Бардина</span><span class="qty">2 пары · 2 опр + 4 линзы</span></div>
-          <div class="v">24 870 ₽</div>
+          <div class="lbl"><div class="ic">Б</div><span>Бардина</span><span class="qty">3 пары · 3 опр + 6 линз</span></div>
+          <div class="v">41 150 ₽</div>
         </div>
         <div class="item">
-          <div class="lbl"><div class="ic">Д</div><span>Дружбы</span><span class="qty">0 пар</span></div>
-          <div class="v" style="color:var(--muted)">—</div>
+          <div class="lbl"><div class="ic">Д</div><span>Дружбы</span><span class="qty">1 пара · 1 опр + 2 линзы</span></div>
+          <div class="v">8 092 ₽</div>
         </div>
       </div>
     </div>
@@ -571,16 +536,16 @@
     <div class="card">
       <div class="sec-title">
         <h3>👁 Контактные линзы (МКЛ)</h3>
-        <small>9 уп · 18 050 ₽</small>
+        <small>14 уп · 33 172 ₽</small>
       </div>
       <div class="sales-list">
         <div class="item">
-          <div class="lbl"><div class="ic">Б</div><span>Бардина</span><span class="qty">0 уп</span></div>
-          <div class="v" style="color:var(--muted)">—</div>
+          <div class="lbl"><div class="ic">Б</div><span>Бардина</span><span class="qty">5 уп ⚠ убыток</span></div>
+          <div class="v" style="color:var(--red)">10 322 ₽</div>
         </div>
         <div class="item">
           <div class="lbl"><div class="ic">Д</div><span>Дружбы</span><span class="qty">9 уп</span></div>
-          <div class="v">18 050 ₽</div>
+          <div class="v">22 850 ₽</div>
         </div>
       </div>
     </div>
@@ -588,32 +553,52 @@
     <div class="card">
       <div class="sec-title">
         <h3>🩺 Услуги клиники</h3>
-        <small>31 шт · 35 850 ₽</small>
+        <small>61 шт · 70 400 ₽</small>
       </div>
       <div class="sales-list">
         <div class="item"><div class="lbl"><div class="ic">К</div><span>Консультация офт.</span><span class="qty">10 шт</span></div><div class="v">22 000 ₽</div></div>
-        <div class="item"><div class="lbl"><div class="ic">О</div><span>ОКТ 2 глаза</span><span class="qty">3 шт</span></div><div class="v">9 000 ₽</div></div>
-        <div class="item"><div class="lbl"><div class="ic">О</div><span>ОКТ повторный 1 глаз</span><span class="qty">2 шт</span></div><div class="v">1 800 ₽</div></div>
-        <div class="item"><div class="lbl"><div class="ic">П</div><span>Периметрия</span><span class="qty">3 шт</span></div><div class="v">1 800 ₽</div></div>
-        <div class="item"><div class="lbl"><div class="ic">И</div><span>Изготовление очков</span><span class="qty">2 шт</span></div><div class="v">1 000 ₽</div></div>
-        <div class="item"><div class="lbl"><div class="ic">С</div><span>СДЭК ПВЗ</span><span class="qty">1 шт</span></div><div class="v">250 ₽</div></div>
-        <div class="item"><div class="lbl"><div class="ic">+</div><span>Бесплатные (подбор/осмотр)</span><span class="qty">10 шт</span></div><div class="v" style="color:var(--muted)">0 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">О</div><span>ОКТ (все виды)</span><span class="qty">15 шт</span></div><div class="v">25 700 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">У</div><span>УЗИ глаза (все виды)</span><span class="qty">10 шт</span></div><div class="v">15 350 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">И</div><span>Изготовление очков</span><span class="qty">4 шт</span></div><div class="v">2 000 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">М</div><span>Маклаков ВГД</span><span class="qty">3 шт</span></div><div class="v">1 200 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">К</div><span>КЧСМ</span><span class="qty">2 шт</span></div><div class="v">1 000 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">Г</div><span>Гониоскопия / Гольдман</span><span class="qty">2 шт</span></div><div class="v">1 800 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">А</div><span>Авторефр.</span><span class="qty">3 шт</span></div><div class="v">750 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">П</div><span>Периметрия</span><span class="qty">1 шт</span></div><div class="v">600 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">+</div><span>Бесплатные (подбор/проверка/осмотр)</span><span class="qty">11 шт</span></div><div class="v" style="color:var(--muted)">0 ₽</div></div>
       </div>
     </div>
 
     <div class="card">
       <div class="sec-title">
         <h3>📦 Прочее</h3>
-        <small>7 шт · 3 230 ₽</small>
+        <small>4 шт · 1 590 ₽</small>
       </div>
       <div class="sales-list">
-        <div class="item"><div class="lbl"><div class="ic">А</div><span>Аксессуары (Бардина)</span><span class="qty">2 шт</span></div><div class="v">1 490 ₽</div></div>
-        <div class="item"><div class="lbl"><div class="ic">А</div><span>Аксессуары (Дружбы)</span><span class="qty">5 шт</span></div><div class="v">1 740 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">А</div><span>Аксессуары (Бардина)</span><span class="qty">2 шт</span></div><div class="v">840 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">А</div><span>Аксессуары (Дружбы)</span><span class="qty">2 шт</span></div><div class="v">750 ₽</div></div>
       </div>
     </div>
 
+    <!-- АРХИВ -->
     <div class="card">
       <h2>📁 Архив · предыдущие дни</h2>
+
+      <div class="arch-day">
+        <div class="head">
+          <div class="d">17.05.2026, вс</div>
+          <div class="b">56 169 ₽ <span style="font-size:11px;color:var(--muted);font-weight:normal">прибыль</span></div>
+        </div>
+        <div class="grid">
+          <div class="it"><span class="v">2</span><span class="l">пары очков</span></div>
+          <div class="it"><span class="v">9</span><span class="l">МКЛ</span></div>
+          <div class="it"><span class="v">31</span><span class="l">услуг</span></div>
+          <div class="it"><span class="v">82 000</span><span class="l">выручка</span></div>
+          <div class="it"><span class="v">102 565</span><span class="l">касса</span></div>
+          <div class="it"><span class="v">68%</span><span class="l">маржа</span></div>
+        </div>
+      </div>
+
       <div class="arch-day">
         <div class="head">
           <div class="d">16.05.2026, сб</div>
@@ -645,55 +630,59 @@
       </div>
     </div>
 
+    <!-- ГРАФИК ЗА МЕСЯЦ — 18 дней -->
     <div class="card">
       <h2>📈 Выручка · Май 2026</h2>
       <div class="chart-legend">
         <span><span class="dot" style="background:#60a5fa"></span>выручка нетто (за день, ₽)</span>
       </div>
-      <div class="chart-wrap">
-        <svg viewBox="0 0 340 160" width="100%" preserveAspectRatio="none" style="display:block">
-          <line x1="0" y1="40" x2="340" y2="40" stroke="#22304d" stroke-width="0.5" stroke-dasharray="2,3"/>
-          <line x1="0" y1="80" x2="340" y2="80" stroke="#22304d" stroke-width="0.5" stroke-dasharray="2,3"/>
-          <line x1="0" y1="120" x2="340" y2="120" stroke="#22304d" stroke-width="0.5" stroke-dasharray="2,3"/>
 
-          <rect x="3"   y="82"  width="9" height="38" fill="#60a5fa" rx="1"/>
-          <rect x="23"  y="64"  width="9" height="56" fill="#60a5fa" rx="1"/>
-          <rect x="43"  y="45"  width="9" height="75" fill="#60a5fa" rx="1"/>
-          <rect x="63"  y="11"  width="9" height="109" fill="#60a5fa" rx="1"/>
-          <rect x="83"  y="11"  width="9" height="109" fill="#60a5fa" rx="1"/>
-          <rect x="103" y="9"   width="9" height="111" fill="#60a5fa" rx="1"/>
-          <rect x="123" y="18"  width="9" height="102" fill="#60a5fa" rx="1"/>
-          <rect x="143" y="27"  width="9" height="93" fill="#60a5fa" rx="1"/>
-          <rect x="163" y="83"  width="9" height="37" fill="#60a5fa" rx="1"/>
-          <rect x="183" y="97"  width="9" height="23" fill="#60a5fa" rx="1"/>
-          <rect x="203" y="2"   width="9" height="118" fill="#60a5fa" rx="1"/>
-          <rect x="223" y="9"   width="9" height="111" fill="#60a5fa" rx="1"/>
-          <rect x="243" y="27"  width="9" height="93" fill="#60a5fa" rx="1"/>
-          <rect x="263" y="32"  width="9" height="88" fill="#60a5fa" rx="1"/>
-          <rect x="283" y="35"  width="9" height="85" fill="#60a5fa" rx="1"/>
-          <rect x="303" y="81"  width="9" height="39" fill="#60a5fa" rx="1"/>
-          <rect x="323" y="59"  width="9" height="61" fill="#a78bfa" rx="1"/>
+      <svg viewBox="0 0 360 160" width="100%" preserveAspectRatio="none" style="display:block">
+        <line x1="0" y1="40" x2="360" y2="40" stroke="#22304d" stroke-width="0.5" stroke-dasharray="2,3"/>
+        <line x1="0" y1="80" x2="360" y2="80" stroke="#22304d" stroke-width="0.5" stroke-dasharray="2,3"/>
+        <line x1="0" y1="120" x2="360" y2="120" stroke="#22304d" stroke-width="0.5" stroke-dasharray="2,3"/>
 
-          <text x="7"   y="155" font-size="8" fill="#9aa7bd" text-anchor="middle">01</text>
-          <text x="87"  y="155" font-size="8" fill="#9aa7bd" text-anchor="middle">05</text>
-          <text x="167" y="155" font-size="8" fill="#9aa7bd" text-anchor="middle">09</text>
-          <text x="247" y="155" font-size="8" fill="#9aa7bd" text-anchor="middle">13</text>
-          <text x="327" y="155" font-size="8" fill="#a78bfa" text-anchor="middle" font-weight="bold">17</text>
-        </svg>
-      </div>
+        <!-- 18 столбиков. Шаг 20, ширина 9 -->
+        <rect x="3"   y="82"  width="9" height="38" fill="#60a5fa" rx="1"/>
+        <rect x="23"  y="64"  width="9" height="56" fill="#60a5fa" rx="1"/>
+        <rect x="43"  y="45"  width="9" height="75" fill="#60a5fa" rx="1"/>
+        <rect x="63"  y="11"  width="9" height="109" fill="#60a5fa" rx="1"/>
+        <rect x="83"  y="11"  width="9" height="109" fill="#60a5fa" rx="1"/>
+        <rect x="103" y="9"   width="9" height="111" fill="#60a5fa" rx="1"/>
+        <rect x="123" y="18"  width="9" height="102" fill="#60a5fa" rx="1"/>
+        <rect x="143" y="27"  width="9" height="93" fill="#60a5fa" rx="1"/>
+        <rect x="163" y="83"  width="9" height="37" fill="#60a5fa" rx="1"/>
+        <rect x="183" y="97"  width="9" height="23" fill="#60a5fa" rx="1"/>
+        <rect x="203" y="2"   width="9" height="118" fill="#60a5fa" rx="1"/>
+        <rect x="223" y="9"   width="9" height="111" fill="#60a5fa" rx="1"/>
+        <rect x="243" y="27"  width="9" height="93" fill="#60a5fa" rx="1"/>
+        <rect x="263" y="32"  width="9" height="88" fill="#60a5fa" rx="1"/>
+        <rect x="283" y="35"  width="9" height="85" fill="#60a5fa" rx="1"/>
+        <rect x="303" y="81"  width="9" height="39" fill="#60a5fa" rx="1"/>
+        <rect x="323" y="59"  width="9" height="61" fill="#60a5fa" rx="1"/>
+        <!-- 18.05 — 190 972 — выделен фиолетовым (сегодня) -->
+        <rect x="343" y="6"   width="9" height="114" fill="#a78bfa" rx="1"/>
+
+        <text x="7"   y="155" font-size="8" fill="#9aa7bd" text-anchor="middle">01</text>
+        <text x="87"  y="155" font-size="8" fill="#9aa7bd" text-anchor="middle">05</text>
+        <text x="167" y="155" font-size="8" fill="#9aa7bd" text-anchor="middle">09</text>
+        <text x="247" y="155" font-size="8" fill="#9aa7bd" text-anchor="middle">13</text>
+        <text x="327" y="155" font-size="8" fill="#9aa7bd" text-anchor="middle">17</text>
+        <text x="347" y="155" font-size="8" fill="#a78bfa" text-anchor="middle" font-weight="bold">18</text>
+      </svg>
 
       <div class="chart-totals">
         <div class="cell">
-          <div class="l">Выручка за 17 дней</div>
-          <div class="v">2 245 180<span class="cur"> ₽</span></div>
+          <div class="l">Выручка за 18 дней</div>
+          <div class="v">2 436 152<span class="cur"> ₽</span></div>
         </div>
         <div class="cell">
           <div class="l">Средн. за рабочий день</div>
-          <div class="v">132 069<span class="cur"> ₽</span></div>
+          <div class="v">135 342<span class="cur"> ₽</span></div>
         </div>
         <div class="cell">
-          <div class="l">Прибыль за 17 дней</div>
-          <div class="v" style="color:var(--green)">~1 778 804<span class="cur"> ₽</span></div>
+          <div class="l">Прибыль за 18 дней</div>
+          <div class="v" style="color:var(--green)">~1 880 854<span class="cur"> ₽</span></div>
         </div>
         <div class="cell">
           <div class="l">Средняя маржа</div>
@@ -701,65 +690,57 @@
         </div>
       </div>
 
-      <div class="sub-line" style="margin-top:10px">пик 11.05 (197К) · выходные 09–10.05 и 16.05 — традиционно слабые</div>
+      <div class="sub-line" style="margin-top:10px">сильный понедельник 18.05 (191К) — второй результат после пика 11.05 (197К)</div>
     </div>
   </div>
 
-  <div class="footer">Doctor Optic · 17.05.2026 · Дашборд v1.3</div>
+  <div class="footer">Doctor Optic · 18.05.2026 · Дашборд v1.4</div>
 </div>
 
 <script>
-  const CORRECT_PIN = '1406';
-  let currentPin = '';
+  let pin = '';
+  const correctPin = '1406';
 
   function addPin(digit) {
-    if (currentPin.length < 4) {
-      currentPin += digit;
+    if (pin.length < 4) {
+      pin += digit;
       updateDisplay();
-      document.getElementById('loginError').textContent = '';
-      document.getElementById('pinDisplay').classList.remove('error');
     }
   }
 
   function delPin() {
-    currentPin = '';
+    pin = pin.slice(0, -1);
     updateDisplay();
-    document.getElementById('loginError').textContent = '';
-    document.getElementById('pinDisplay').classList.remove('error');
   }
 
   function updateDisplay() {
-    const display = document.getElementById('pinDisplay');
-    if (currentPin.length === 0) {
-      display.textContent = '••••';
+    const display = document.getElementById('pin-display');
+    if (pin.length === 0) {
+      display.textContent = '----';
+      display.classList.add('empty');
     } else {
-      display.textContent = '•'.repeat(currentPin.length) + '•'.repeat(4 - currentPin.length);
+      display.textContent = '●'.repeat(pin.length) + '−'.repeat(4 - pin.length);
+      display.classList.remove('empty');
     }
   }
 
   function checkPin() {
-    const errorEl = document.getElementById('loginError');
-    const display = document.getElementById('pinDisplay');
-
-    if (currentPin === CORRECT_PIN) {
+    if (pin === correctPin) {
+      document.getElementById('login').classList.add('hidden');
+      document.getElementById('content').classList.add('authenticated');
       sessionStorage.setItem('authenticated', 'true');
-      document.getElementById('loginScreen').classList.add('hidden');
-      document.getElementById('appContent').classList.add('authenticated');
-      currentPin = '';
-      errorEl.textContent = '';
-      display.classList.remove('error');
-    } else if (currentPin.length === 4) {
-      errorEl.textContent = 'Неверный код';
-      display.classList.add('error');
-      currentPin = '';
+    } else {
+      pin = '';
       updateDisplay();
     }
   }
 
-  if (sessionStorage.getItem('authenticated') === 'true') {
-    document.getElementById('loginScreen').classList.add('hidden');
-    document.getElementById('appContent').classList.add('authenticated');
-  }
+  window.addEventListener('DOMContentLoaded', () => {
+    if (sessionStorage.getItem('authenticated') === 'true') {
+      document.getElementById('login').classList.add('hidden');
+      document.getElementById('content').classList.add('authenticated');
+    }
+  });
 
   const tabs = document.querySelectorAll('.nav button');
   const panes = {money:'pane-money', debt:'pane-debt', sales:'pane-sales'};
