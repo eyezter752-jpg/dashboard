@@ -759,6 +759,29 @@
     document.getElementById(panes[b.dataset.tab]).classList.add('on');
     window.scrollTo({top:0, behavior:'smooth'});
   }));
+
+  let pin = '';
+  function addPin(digit) {
+    if (pin.length < 4) {
+      pin += digit;
+      document.getElementById('pinDisplay').textContent = '●'.repeat(pin.length);
+    }
+  }
+  function delPin() {
+    pin = pin.slice(0, -1);
+    document.getElementById('pinDisplay').textContent = pin.length ? '●'.repeat(pin.length) : '····';
+  }
+  function checkPin() {
+    if (pin === '1406') {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('appContent').style.display = 'block';
+    } else {
+      document.getElementById('loginError').textContent = 'Неправильный пароль';
+      pin = '';
+      document.getElementById('pinDisplay').textContent = '····';
+      setTimeout(() => document.getElementById('loginError').textContent = '', 2000);
+    }
+  }
 </script>
 </body>
 </html>
