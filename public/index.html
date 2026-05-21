@@ -215,17 +215,17 @@
     <div class="logo">ДО</div>
     <div>
       <div class="title">Doctor Optic</div>
-      <div class="sub">20.05.2026, ср · обновлено 23:50</div>
+      <div class="sub">21.05.2026, чт · обновлено 23:50</div>
     </div>
     <div class="right">
-      <span class="stoplight"><span class="dot"></span>Овердрафт 84%</span>
+      <span class="stoplight"><span class="dot"></span>Овердрафт 87%</span>
     </div>
   </div>
 
-  <!-- ТРЕВОЖНЫЙ БАННЕР -->
+  <!-- ТРЕВОЖНЫЙ БАННЕР по платежам -->
   <div class="alert">
-    <div class="ah">⚠ Резкое падение ликвидности</div>
-    <div class="ab">За 2 дня деньги упали с <b>1 211 К</b> до <b>447 К</b> (−764 К). Прошли крупные платежи: Стормов (медтехника) 533 К, лизинг 114 К, ЗП Фехтел 14 К. Депозит ИН −78 К. На 25.05 предстоит ОДВ 205 К.</div>
+    <div class="ah">⚠ Кассовый разрыв до конца мая</div>
+    <div class="ab">Деньги <b>492 К</b> · до конца мая нужно <b>~710 К</b> (поставщики 472К + кредиты 240К). Дефицит <b>~218 К</b>. Самый тяжёлый день — <b>25.05 (пн): −250 К</b> (ОДВ + Сбер СА + ДубльГИС).</div>
   </div>
 
   <div class="nav">
@@ -238,70 +238,134 @@
   <div class="pane on" id="pane-money">
     <div class="card">
       <h2>Деньги сейчас <span class="badge amber">Ликвидность низкая</span></h2>
-      <div class="big">447 228<span class="cur">₽</span></div>
-      <div class="sub-line">сумма на собственных счетах · <span class="delta-bad">▼ −764 137 ₽ vs 18.05</span></div>
+      <div class="big">492 151<span class="cur">₽</span></div>
+      <div class="sub-line">сумма на собственных счетах · <span class="delta-good">▲ +44 923 ₽ vs 20.05</span></div>
 
-      <div class="row"><span class="lbl">Депозит ИН</span><span class="val">308 600 ₽</span></div>
+      <div class="row"><span class="lbl">Депозит ИН</span><span class="val">306 000 ₽</span></div>
       <div class="row"><span class="lbl">Заначка ИН</span><span class="val">95 209 ₽</span></div>
-      <div class="row"><span class="lbl">Касса Бардина</span><span class="val">12 780 ₽</span></div>
-      <div class="row"><span class="lbl">Касса Дружбы</span><span class="val">10 756 ₽</span></div>
-      <div class="row"><span class="lbl">Одуван (хоз)</span><span class="val">10 400 ₽</span></div>
-      <div class="row"><span class="lbl">Р/с Сбер ООО</span><span class="val" style="color:var(--amber)">7 384 ₽ ⚠</span></div>
-      <div class="row"><span class="lbl">Сейф</span><span class="val" style="color:var(--amber)">2 100 ₽ ⚠</span></div>
+      <div class="row"><span class="lbl">Р/с Сбер ООО</span><span class="val">49 507 ₽</span></div>
+      <div class="row"><span class="lbl">Касса Бардина</span><span class="val">30 180 ₽</span></div>
+      <div class="row"><span class="lbl">Касса Дружбы</span><span class="val">11 256 ₽</span></div>
+      <div class="row"><span class="lbl">Сейф / Одуван</span><span class="val" style="color:var(--muted)">нет данных</span></div>
     </div>
 
     <div class="card">
-      <h2>Овердрафт КББ <span class="badge amber">84%</span></h2>
+      <h2>Овердрафт КББ <span class="badge red">87% — критично</span></h2>
       <div class="od-grid">
         <div class="od-cell">
           <div class="l">Использовано</div>
-          <div class="v">1 253 683 ₽</div>
+          <div class="v">1 311 911 ₽</div>
         </div>
         <div class="od-cell">
           <div class="l">Запас (свободно)</div>
-          <div class="v" style="color:var(--amber)">246 317 ₽</div>
+          <div class="v" style="color:var(--red)">188 089 ₽</div>
         </div>
       </div>
-      <div class="bar"><i style="width:84%"></i></div>
+      <div class="bar"><i style="width:87%"></i></div>
       <div class="bar-cap"><span>0</span><span>лимит 1 500 000 ₽</span></div>
 
       <div class="row" style="margin-top:8px"><span class="lbl">Дата гашения овердрафта</span><span class="val" style="color:var(--red)">15.06.2026</span></div>
-      <div class="row"><span class="lbl">Проценты в месяц</span><span class="val">~35 000 ₽</span></div>
-      <div class="row"><span class="lbl">Изменение vs 18.05</span><span class="val delta-bad">▲ +106 182 ₽</span></div>
+      <div class="row"><span class="lbl">Изменение vs 20.05</span><span class="val delta-bad">▲ +58 227 ₽ за день</span></div>
+      <div class="sub-line" style="margin-top:6px">25.05 ОДВ 204К пойдёт с КББ — может пробить лимит</div>
+    </div>
+
+    <!-- ГЛАВНЫЙ БЛОК: ПРЕДСТОЯЩИЕ ПЛАТЕЖИ ПО ДНЯМ -->
+    <div class="card">
+      <h2>📅 Платёжный календарь · до конца мая</h2>
+
+      <div class="pay-cal">
+        <!-- 22.05 (завтра, пятница) -->
+        <div class="pay-day tomorrow">
+          <div class="day-head">
+            <div class="dt">22.05 <span class="dow">пт · завтра</span></div>
+            <div class="total">69 274 ₽</div>
+          </div>
+          <div class="items">
+            <div class="item"><span class="name">Джонсон & Джонсон (МКЛ) · КББ</span><span class="amt">64 312 ₽</span></div>
+            <div class="item"><span class="name">ЭНЕРГОТРАНЗИТ · КББ</span><span class="amt">4 962 ₽</span></div>
+          </div>
+        </div>
+
+        <!-- 25.05 (понедельник) — самый тяжёлый -->
+        <div class="pay-day critical">
+          <div class="day-head">
+            <div class="dt">25.05 <span class="dow">пн · ТЯЖЁЛЫЙ ДЕНЬ</span></div>
+            <div class="total">253 235 ₽</div>
+          </div>
+          <div class="items">
+            <div class="item"><span class="name">Завод ОДВ (оправы) · КББ</span><span class="amt">204 615 ₽</span></div>
+            <div class="item"><span class="name">Сбер 3 СА · кредит</span><span class="amt">44 246 ₽</span></div>
+            <div class="item"><span class="name">ДубльГИС (реклама) · Сбер</span><span class="amt">28 970 ₽</span></div>
+            <div class="item"><span class="name">Поставщик #6 · КББ</span><span class="amt">13 403 ₽</span></div>
+            <div class="item"><span class="name">ОПТИК-КЛУБ · КББ</span><span class="amt">4 442 ₽</span></div>
+            <div class="item"><span class="name">УК Проспект · КББ</span><span class="amt">1 320 ₽</span></div>
+            <div class="item"><span class="name">Водоканал · КББ</span><span class="amt">485 ₽</span></div>
+          </div>
+        </div>
+
+        <!-- 28.05 -->
+        <div class="pay-day critical">
+          <div class="day-head">
+            <div class="dt">28.05 <span class="dow">чт</span></div>
+            <div class="total">178 782 ₽</div>
+          </div>
+          <div class="items">
+            <div class="item"><span class="name">Джонсон & Джонсон (МКЛ) · КББ</span><span class="amt">156 288 ₽</span></div>
+            <div class="item"><span class="name">Поставщик #2 · КББ</span><span class="amt">13 449 ₽</span></div>
+            <div class="item"><span class="name">Поставщик #3 · КББ</span><span class="amt">9 045 ₽</span></div>
+          </div>
+        </div>
+
+        <!-- 30.05 (Сбер 4 СА) -->
+        <div class="pay-day">
+          <div class="day-head">
+            <div class="dt">30.05 <span class="dow">сб</span></div>
+            <div class="total">18 500 ₽</div>
+          </div>
+          <div class="items">
+            <div class="item"><span class="name">Сбер 4 СА · кредит</span><span class="amt">18 500 ₽</span></div>
+          </div>
+        </div>
+
+        <!-- 31.05 — концовка месяца -->
+        <div class="pay-day critical">
+          <div class="day-head">
+            <div class="dt">31.05 <span class="dow">вс · ОКОНЧАНИЕ МЕСЯЦА</span></div>
+            <div class="total">148 302 ₽</div>
+          </div>
+          <div class="items">
+            <div class="item"><span class="name">КББ 3 млн · кредит</span><span class="amt">86 000 ₽</span></div>
+            <div class="item"><span class="name">Сбер 1 ИН · кредит</span><span class="amt">30 318 ₽</span></div>
+            <div class="item"><span class="name">Сбер 2 ИН · кредит</span><span class="amt">12 609 ₽</span></div>
+            <div class="item"><span class="name">Сбер 3 ИН · кредит</span><span class="amt">10 561 ₽</span></div>
+            <div class="item"><span class="name">Сбер 4 ИН · кредит</span><span class="amt">8 814 ₽</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ИТОГ КАССОВОГО РАЗРЫВА -->
+      <div class="cash-gap">
+        <div class="gap-row"><span>Деньги сейчас (без КББ)</span><span class="v" style="color:var(--green)">492 151 ₽</span></div>
+        <div class="gap-row"><span>+ Запас овердрафта</span><span class="v" style="color:var(--amber)">188 089 ₽</span></div>
+        <div class="gap-row"><span>+ Поступления (план ~9 раб. дней × 130К × 50%)</span><span class="v" style="color:var(--green)">~585 000 ₽</span></div>
+        <div class="gap-row"><span>− Поставщики 22–28.05</span><span class="v" style="color:var(--red)">−472 000 ₽</span></div>
+        <div class="gap-row"><span>− Кредиты 25–31.05</span><span class="v" style="color:var(--red)">−240 000 ₽</span></div>
+        <div class="gap-row total red"><span>Прогноз на 01.06</span><span class="v">+553 000 ₽</span></div>
+        <div class="sub-line" style="margin-top:8px">При выручке как сейчас (~130К/день) — закрываем месяц без разрыва. Если день меньше 80К — нужно переносить часть платежей.</div>
+      </div>
     </div>
 
     <div class="card">
       <h2>Товарка</h2>
       <div class="row">
         <span class="lbl">Невыданные заказы · доплата клиентов
-          <small>108 заказов · 4 старше 30 дн.</small>
+          <small>108 заказов · 5 старше 30 дн.</small>
         </span>
-        <span class="val" style="color:var(--green)">+ 344 305 ₽</span>
+        <span class="val" style="color:var(--green)">+ 357 575 ₽</span>
       </div>
-      <div class="row"><span class="lbl">Склад · закупочная</span><span class="val">3 183 947 ₽</span></div>
-      <div class="row"><span class="lbl">Склад · розничная</span><span class="val">11 906 169 ₽</span></div>
+      <div class="row"><span class="lbl">Склад · закупочная</span><span class="val">3 181 264 ₽</span></div>
+      <div class="row"><span class="lbl">Склад · розничная</span><span class="val">11 963 474 ₽</span></div>
       <div class="row"><span class="lbl">Задолженность поставщикам</span><span class="val" style="color:var(--amber)">~1 288 029 ₽</span></div>
-    </div>
-
-    <div class="card">
-      <h2>Платежи · платёжный календарь</h2>
-      <div class="row"><span class="lbl">Ближайшие 7 дней (21–27.05)</span><span class="val" style="color:var(--red)">~485 000 ₽</span></div>
-      <div class="row"><span class="lbl">Ближайшие 14 дней (21.05–03.06)</span><span class="val">~720 000 ₽</span></div>
-      <div class="sub-line" style="margin-top:6px">25.05 — самый тяжёлый день: ОДВ 204К, лизинг 112К (другой!), Сбер 3 СА 44К</div>
-    </div>
-
-    <div class="card">
-      <h2>Подготовлены в банке к оплате</h2>
-      <div class="big" style="font-size:24px">773 689<span class="cur">₽</span></div>
-      <div class="sub-line">детализация во вкладке «Долги»</div>
-      <div class="row" style="margin-top:8px">
-        <span class="lbl">Будущие (после 20.05)</span>
-        <span class="val" style="color:var(--red)">494 494 ₽ · 13 платежей</span>
-      </div>
-      <div class="row">
-        <span class="lbl">Прошлые / без даты</span>
-        <span class="val" style="color:var(--muted)">279 195 ₽ · 6 платежей</span>
-      </div>
     </div>
   </div>
 
@@ -309,11 +373,11 @@
   <div class="pane" id="pane-debt">
     <div class="card">
       <h2>Кредитный портфель</h2>
-      <div class="big">14 483 999<span class="cur">₽</span></div>
-      <div class="sub-line">10 активных + 1 заморожен · Спиридонов % за май оплачен ✓</div>
+      <div class="big">14 542 226<span class="cur">₽</span></div>
+      <div class="sub-line">10 активных + 1 заморожен · Спиридонов + Лизинг за май оплачены ✓</div>
       <div class="row"><span class="lbl">Платёж в мае</span><span class="val">431 390 ₽</span></div>
-      <div class="row"><span class="lbl">в т.ч. оплачено</span><span class="val" style="color:var(--green)">~186 К (Спиридонов 73К + лизинг 114К)</span></div>
-      <div class="row"><span class="lbl">остаток к выплате в мае</span><span class="val" style="color:var(--amber)">~245 К</span></div>
+      <div class="row"><span class="lbl">в т.ч. оплачено</span><span class="val" style="color:var(--green)">~187 К (Спиридонов 73К + лизинг 114К)</span></div>
+      <div class="row"><span class="lbl">остаток к выплате в мае</span><span class="val" style="color:var(--red)">~245 К на 25–31.05</span></div>
     </div>
 
     <div class="card">
@@ -322,7 +386,7 @@
       <div class="loan priority">
         <div class="name">🔴 КББ Овердрафт <span class="pill">досрочка</span><span class="end">до 06.2026</span></div>
         <div class="pay">35 000 ₽</div>
-        <div class="ost">остаток 1 253 683 ₽ · 22,9% · % only</div>
+        <div class="ost">остаток 1 311 911 ₽ · 22,9% · % only</div>
         <div class="dt">15.06.2026</div>
       </div>
 
@@ -336,7 +400,7 @@
       <div class="loan paid">
         <div class="name">✅ Лизинг ДельтаЛиз <span class="pill">оплачен · май</span><span class="end">до 10.2029</span></div>
         <div class="pay">113 596 ₽</div>
-        <div class="ost">остаток ~3 626 К · ~15% · оплачен 20.05</div>
+        <div class="ost">остаток ~3 626 К · ~15%</div>
         <div class="dt">20.05.2026 ✓</div>
       </div>
 
@@ -398,100 +462,24 @@
     </div>
 
     <div class="card">
-      <h2>Подготовлены в банке к оплате <span class="badge red">19 платежей · 773 689 ₽</span></h2>
+      <h2>Подготовлены в банке к оплате <span class="badge red">11 платежей · 501 К</span></h2>
+      <div class="sub-line" style="margin-bottom:10px">детально расписано в «Платёжный календарь» (вкладка «Деньги»)</div>
 
-      <div class="pending-section" style="border-top:0;padding-top:0;margin-top:0">
-        <div class="sec-h">
-          <span>🟡 БУДУЩИЕ · 13</span>
-          <span class="sum" style="color:var(--red)">494 494 ₽</span>
-        </div>
-
-        <div class="pending-item">
-          <div class="pl">ООО «Завод рец. оптики ОДВ»<small>25.05 · оправы/линзы · КББ</small></div>
-          <div class="pv" style="color:var(--red)">204 615 ₽</div>
-        </div>
-        <div class="pending-item">
-          <div class="pl">ООО «Джонсон & Джонсон»<small>28.05 · контактные линзы · КББ</small></div>
-          <div class="pv" style="color:var(--red)">156 288 ₽</div>
-        </div>
-        <div class="pending-item">
-          <div class="pl">ООО «Джонсон & Джонсон»<small>22.05 · контактные линзы · КББ</small></div>
-          <div class="pv">64 312 ₽</div>
-        </div>
-        <div class="pending-item">
-          <div class="pl">ООО (поставщик #2)<small>28.05 · КББ</small></div>
-          <div class="pv">13 449 ₽</div>
-        </div>
-        <div class="pending-item">
-          <div class="pl">ООО (поставщик #6)<small>25.05 · КББ</small></div>
-          <div class="pv">13 403 ₽</div>
-        </div>
-        <div class="pending-item">
-          <div class="pl">ООО (поставщик #12)<small>21.05 · КББ</small></div>
-          <div class="pv">9 748 ₽</div>
-        </div>
-        <div class="pending-item">
-          <div class="pl">ООО (поставщик #3)<small>28.05 · КББ</small></div>
-          <div class="pv">9 045 ₽</div>
-        </div>
-        <div class="pending-item">
-          <div class="pl">ИП Каширин Сергей В.<small>21.05 · КББ</small></div>
-          <div class="pv">8 525 ₽</div>
-        </div>
-        <div class="pending-item">
-          <div class="pl">ООО «ЭНЕРГОТРАНЗИТ»<small>22.05 · электроэнергия · КББ</small></div>
-          <div class="pv">4 962 ₽</div>
-        </div>
-        <div class="pending-item">
-          <div class="pl">ООО «ОПТИК-КЛУБ»<small>25.05 · КББ</small></div>
-          <div class="pv">4 442 ₽</div>
-        </div>
-        <div class="pending-item">
-          <div class="pl">ООО (поставщик #13)<small>21.05 · КББ</small></div>
-          <div class="pv">3 899 ₽</div>
-        </div>
-        <div class="pending-item">
-          <div class="pl">ООО «УК «Проспект»<small>25.05 · коммуналка · КББ</small></div>
-          <div class="pv">1 320 ₽</div>
-        </div>
-        <div class="pending-item">
-          <div class="pl">ООО «Водоканал»<small>25.05 · ХВС · КББ</small></div>
-          <div class="pv">485 ₽</div>
-        </div>
+      <div class="row"><span class="lbl">22.05 (пт) · поставщики</span><span class="val">69 274 ₽</span></div>
+      <div class="row"><span class="lbl">25.05 (пн) · ОДВ + коммуналка</span><span class="val" style="color:var(--red)">224 265 ₽</span></div>
+      <div class="row"><span class="lbl">28.05 (чт) · Джонсон</span><span class="val" style="color:var(--red)">178 782 ₽</span></div>
+      <div class="row"><span class="lbl">Будущие итого</span><span class="val">472 322 ₽</span></div>
+      <div class="row"><span class="lbl">+ ДубльГИС 25.05 (Сбер)</span><span class="val">28 970 ₽</span></div>
+      <div class="row" style="border-top:1px solid var(--line);padding-top:10px;margin-top:4px">
+        <span class="lbl"><b>ИТОГО к оплате до конца мая</b></span>
+        <span class="val" style="color:var(--red)"><b>501 292 ₽</b></span>
       </div>
 
-      <div class="pending-section">
-        <div class="sec-h">
-          <span>⚪ ПРОШЛЫЕ / БЕЗ ДАТЫ · 6</span>
-          <span class="sum" style="color:var(--muted)">279 195 ₽</span>
-        </div>
-        <div class="sub-line" style="margin-bottom:10px">могут быть уже списаны — сверить с выписками</div>
-
-        <div class="pending-item">
-          <div class="pl">ИП Пириева Валентина Л.<small>11.04 · оправы · ОЧЕНЬ СТАРАЯ · КББ</small></div>
-          <div class="pv" style="color:var(--red)">148 255 ₽</div>
-        </div>
-        <div class="pending-item">
-          <div class="pl">АО «Кузнецкая ТЭЦ»<small>без даты · теплоэнергия · КББ</small></div>
-          <div class="pv" style="color:var(--red)">42 038 ₽</div>
-        </div>
-        <div class="pending-item">
-          <div class="pl">ООО «ОПТИКА-САЙМ»<small>30.03 · с/з · ОЧЕНЬ СТАРАЯ · КББ</small></div>
-          <div class="pv" style="color:var(--red)">40 977 ₽</div>
-        </div>
-        <div class="pending-item">
-          <div class="pl">ООО (поставщик #15)<small>18.05 · КББ</small></div>
-          <div class="pv">34 414 ₽</div>
-        </div>
-        <div class="pending-item">
-          <div class="pl">ООО (поставщик #14)<small>20.05 · КББ</small></div>
-          <div class="pv">12 995 ₽</div>
-        </div>
-        <div class="pending-item">
-          <div class="pl">ПАО «ВымпелКом»<small>08.05 · связь · КББ</small></div>
-          <div class="pv">516 ₽</div>
-        </div>
+      <div class="row" style="border-top:1px solid var(--line);padding-top:10px;margin-top:4px">
+        <span class="lbl">Прошлые / без даты (КББ)</span>
+        <span class="val" style="color:var(--muted)">218 352 ₽ · 7 шт</span>
       </div>
+      <div class="sub-line" style="margin-top:6px">в т.ч. Пириева 148К без даты · поставщики 18.05 (34К), 20.05 (13К) · ВымпелКом 08.05</div>
     </div>
   </div>
 
@@ -499,22 +487,22 @@
   <div class="pane" id="pane-sales">
 
     <div class="card">
-      <h2>Сегодня · 20.05 (ср)</h2>
+      <h2>Сегодня · 21.05 (чт)</h2>
       <div class="kpi-grid">
         <div class="kpi">
           <div class="l">Валовая прибыль</div>
-          <div class="v" style="color:var(--green)">93 104 ₽</div>
-          <div class="d" style="color:var(--muted)">общая маржа 69,1%</div>
+          <div class="v" style="color:var(--green)">131 269 ₽</div>
+          <div class="d" style="color:var(--muted)">общая маржа 71,7%</div>
         </div>
         <div class="kpi">
           <div class="l">Выручка по продажам</div>
-          <div class="v">134 751 ₽</div>
-          <div class="d" style="color:var(--muted)">81 позиция</div>
+          <div class="v">182 960 ₽</div>
+          <div class="d" style="color:var(--muted)">78 позиций</div>
         </div>
         <div class="kpi">
-          <div class="l">Касса дня</div>
-          <div class="v">149 216 ₽</div>
-          <div class="d" style="color:var(--muted)">средний рабочий день</div>
+          <div class="l">Касса дня ⭐</div>
+          <div class="v" style="color:var(--green)">249 740 ₽</div>
+          <div class="d" style="color:var(--muted)">РЕКОРД мая</div>
         </div>
         <div class="kpi">
           <div class="l">Возвраты</div>
@@ -528,57 +516,52 @@
         <div class="row-split">
           <div class="name" style="color:var(--accent)">📦 Товарка</div>
           <div>
-            <div style="font-size:11px;color:var(--muted);margin-bottom:2px">маржа 45,9% · 34 шт</div>
-            <div class="bar-mini"><i style="width:46%;background:var(--accent)"></i></div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:2px">маржа 52,7% · 24 шт</div>
+            <div class="bar-mini"><i style="width:53%;background:var(--accent)"></i></div>
           </div>
-          <div class="v" style="color:var(--accent)">35 404 ₽<br><span style="font-size:10px;color:var(--muted);font-weight:400">из 77 051 ₽</span></div>
+          <div class="v" style="color:var(--accent)">57 519 ₽<br><span style="font-size:10px;color:var(--muted);font-weight:400">из 109 210 ₽</span></div>
         </div>
         <div class="row-split">
           <div class="name" style="color:var(--green)">🩺 Услуги</div>
           <div>
-            <div style="font-size:11px;color:var(--muted);margin-bottom:2px">маржа 100% · 47 шт</div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:2px">маржа 100% · 54 шт</div>
             <div class="bar-mini"><i style="width:100%;background:var(--green)"></i></div>
           </div>
-          <div class="v" style="color:var(--green)">57 700 ₽<br><span style="font-size:10px;color:var(--muted);font-weight:400">из 57 700 ₽</span></div>
+          <div class="v" style="color:var(--green)">73 750 ₽<br><span style="font-size:10px;color:var(--muted);font-weight:400">из 73 750 ₽</span></div>
         </div>
         <div class="row-split" style="border-top:1px solid var(--line);padding-top:8px;margin-top:4px">
           <div class="name">Σ Итого</div>
-          <div style="font-size:11px;color:var(--muted)">смешанная маржа 69,1%</div>
-          <div class="v">93 104 ₽</div>
+          <div style="font-size:11px;color:var(--muted)">смешанная маржа 71,7%</div>
+          <div class="v">131 269 ₽</div>
         </div>
       </div>
     </div>
 
     <div class="card">
       <div class="sec-title">
-        <h3>👓 Очки и солнцезащитные</h3>
-        <small>4 оправы + 6 линз · 40 730 ₽</small>
+        <h3>👓 Очки</h3>
+        <small>5 пар · 85 810 ₽</small>
       </div>
 
       <div class="glasses-note">
         💡 <b>1 пара очков = 1 оправа + 2 линзы.</b>
-        Продано 4 оправы и 6 линз → <b>~3 пары очков</b> + 1 оправа без линз (возможно с линзами клиента).
-        Дополнительно 2 солнцезащитные.
+        Продано 5 оправ и 10 линз → ровно <b>5 готовых пар</b>.
       </div>
 
       <div class="glasses-grid">
-        <div class="cell"><div class="v">3</div><div class="l">пары очков</div></div>
-        <div class="cell"><div class="v">4</div><div class="l">оправы</div></div>
-        <div class="cell"><div class="v">6</div><div class="l">линзы</div></div>
+        <div class="cell"><div class="v">5</div><div class="l">пары очков</div></div>
+        <div class="cell"><div class="v">5</div><div class="l">оправы</div></div>
+        <div class="cell"><div class="v">10</div><div class="l">линзы</div></div>
       </div>
 
       <div class="sales-list" style="margin-top:14px">
         <div class="item">
-          <div class="lbl"><div class="ic">Б</div><span>Бардина · оправы+линзы</span><span class="qty">3 опр + 4 линзы</span></div>
-          <div class="v">12 300 ₽</div>
+          <div class="lbl"><div class="ic">Б</div><span>Бардина</span><span class="qty">3 пары · 3 опр + 6 линз</span></div>
+          <div class="v">59 550 ₽</div>
         </div>
         <div class="item">
-          <div class="lbl"><div class="ic">Д</div><span>Дружбы · оправа+линзы</span><span class="qty">1 опр + 2 линзы</span></div>
-          <div class="v">24 080 ₽</div>
-        </div>
-        <div class="item">
-          <div class="lbl"><div class="ic">☀</div><span>Солнцезащитные (Бардина)</span><span class="qty">2 шт</span></div>
-          <div class="v">4 350 ₽</div>
+          <div class="lbl"><div class="ic">Д</div><span>Дружбы</span><span class="qty">2 пары · 2 опр + 4 линзы</span></div>
+          <div class="v">26 260 ₽</div>
         </div>
       </div>
     </div>
@@ -586,53 +569,67 @@
     <div class="card">
       <div class="sec-title">
         <h3>👁 Контактные линзы (МКЛ)</h3>
-        <small>13 уп · 33 480 ₽</small>
+        <small>8 уп · 22 900 ₽</small>
       </div>
       <div class="sales-list">
         <div class="item">
-          <div class="lbl"><div class="ic">Б</div><span>Бардина</span><span class="qty">3 уп · маржа 6,9%</span></div>
-          <div class="v" style="color:var(--amber)">6 430 ₽</div>
+          <div class="lbl"><div class="ic">Б</div><span>Бардина</span><span class="qty">1 уп · маржа 14,7%</span></div>
+          <div class="v" style="color:var(--amber)">2 950 ₽</div>
         </div>
         <div class="item">
-          <div class="lbl"><div class="ic">Д</div><span>Дружбы</span><span class="qty">10 уп · маржа 20,6%</span></div>
-          <div class="v">27 050 ₽</div>
+          <div class="lbl"><div class="ic">Д</div><span>Дружбы</span><span class="qty">7 уп · маржа 15,6%</span></div>
+          <div class="v" style="color:var(--amber)">19 950 ₽</div>
         </div>
       </div>
+      <div class="sub-line" style="margin-top:8px;font-size:11px">⚠ маржа МКЛ традиционно низкая (15%) — это нормально для рынка, но не «зарабатываем»</div>
     </div>
 
     <div class="card">
       <div class="sec-title">
         <h3>🩺 Услуги клиники</h3>
-        <small>47 шт · 57 700 ₽</small>
+        <small>54 шт · 73 750 ₽</small>
       </div>
       <div class="sales-list">
-        <div class="item"><div class="lbl"><div class="ic">А</div><span>ОКТ АНГИО ⭐</span><span class="qty">4 шт</span></div><div class="v">22 000 ₽</div></div>
-        <div class="item"><div class="lbl"><div class="ic">О</div><span>ОКТ (другие виды)</span><span class="qty">9 шт</span></div><div class="v">17 100 ₽</div></div>
-        <div class="item"><div class="lbl"><div class="ic">У</div><span>УЗИ глаза (все)</span><span class="qty">8 шт</span></div><div class="v">12 600 ₽</div></div>
-        <div class="item"><div class="lbl"><div class="ic">А</div><span>Авторефрактокератометрия</span><span class="qty">12 шт</span></div><div class="v">3 000 ₽</div></div>
-        <div class="item"><div class="lbl"><div class="ic">И</div><span>Изготовление очков</span><span class="qty">3 шт</span></div><div class="v">1 500 ₽</div></div>
-        <div class="item"><div class="lbl"><div class="ic">П</div><span>Периметрия</span><span class="qty">1 шт</span></div><div class="v">600 ₽</div></div>
-        <div class="item"><div class="lbl"><div class="ic">К</div><span>КЧСМ</span><span class="qty">1 шт</span></div><div class="v">500 ₽</div></div>
-        <div class="item"><div class="lbl"><div class="ic">М</div><span>Маклаков ВГД</span><span class="qty">1 шт</span></div><div class="v">400 ₽</div></div>
-        <div class="item"><div class="lbl"><div class="ic">+</div><span>Бесплатные (подбор/осмотр/проверка)</span><span class="qty">8 шт</span></div><div class="v" style="color:var(--muted)">0 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">О</div><span>ОКТ (все виды) ⭐</span><span class="qty">24 шт</span></div><div class="v">54 600 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">К</div><span>Консультация офт.</span><span class="qty">4 шт</span></div><div class="v">8 800 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">У</div><span>УЗИ глаза (все)</span><span class="qty">5 шт</span></div><div class="v">6 500 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">И</div><span>Изготовление очков</span><span class="qty">5 шт</span></div><div class="v">2 500 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">М</div><span>Маклаков ВГД</span><span class="qty">2 шт</span></div><div class="v">800 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">Т</div><span>ТО очков малое</span><span class="qty">1 шт</span></div><div class="v">300 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">А</div><span>Авторефр.</span><span class="qty">1 шт</span></div><div class="v">250 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">+</div><span>Бесплатные (подбор/осмотр/проверка/УЗ-чистка)</span><span class="qty">12 шт</span></div><div class="v" style="color:var(--muted)">0 ₽</div></div>
       </div>
-      <div class="sub-line" style="margin-top:8px;font-size:11px">⭐ ОКТ АНГИО — 4 услуги по 5,5К каждая = выдающийся день по высокомаржинальным процедурам</div>
+      <div class="sub-line" style="margin-top:8px;font-size:11px">⭐ ОКТ 24 шт — выдающийся день по визуализации, 74% всех услуг</div>
     </div>
 
     <div class="card">
       <div class="sec-title">
         <h3>📦 Прочее</h3>
-        <small>9 шт · 2 841 ₽</small>
+        <small>1 шт · 500 ₽</small>
       </div>
       <div class="sales-list">
-        <div class="item"><div class="lbl"><div class="ic">А</div><span>Аксессуары (Бардина)</span><span class="qty">7 шт</span></div><div class="v">2 595 ₽</div></div>
-        <div class="item"><div class="lbl"><div class="ic">А</div><span>Аксессуары (Дружбы)</span><span class="qty">2 шт</span></div><div class="v">246 ₽</div></div>
+        <div class="item"><div class="lbl"><div class="ic">А</div><span>Аксессуары (Дружбы)</span><span class="qty">1 шт</span></div><div class="v">500 ₽</div></div>
       </div>
     </div>
 
     <!-- АРХИВ -->
     <div class="card">
       <h2>📁 Архив · предыдущие дни</h2>
+
+      <div class="arch-day">
+        <div class="head">
+          <div class="d">20.05.2026, ср</div>
+          <div class="b">93 104 ₽ <span style="font-size:11px;color:var(--muted);font-weight:normal">прибыль</span></div>
+        </div>
+        <div class="grid">
+          <div class="it"><span class="v">3</span><span class="l">пары очков</span></div>
+          <div class="it"><span class="v">13</span><span class="l">МКЛ</span></div>
+          <div class="it"><span class="v">47</span><span class="l">услуг</span></div>
+          <div class="it"><span class="v">134 751</span><span class="l">выручка</span></div>
+          <div class="it"><span class="v">149 216</span><span class="l">касса</span></div>
+          <div class="it"><span class="v">69%</span><span class="l">маржа</span></div>
+        </div>
+      </div>
 
       <div class="arch-day">
         <div class="head">
@@ -663,36 +660,21 @@
           <div class="it"><span class="v">66%</span><span class="l">маржа</span></div>
         </div>
       </div>
-
-      <div class="arch-day">
-        <div class="head">
-          <div class="d">17.05.2026, вс</div>
-          <div class="b">56 169 ₽ <span style="font-size:11px;color:var(--muted);font-weight:normal">прибыль</span></div>
-        </div>
-        <div class="grid">
-          <div class="it"><span class="v">2</span><span class="l">пары очков</span></div>
-          <div class="it"><span class="v">9</span><span class="l">МКЛ</span></div>
-          <div class="it"><span class="v">31</span><span class="l">услуг</span></div>
-          <div class="it"><span class="v">82 000</span><span class="l">выручка</span></div>
-          <div class="it"><span class="v">102 565</span><span class="l">касса</span></div>
-          <div class="it"><span class="v">68%</span><span class="l">маржа</span></div>
-        </div>
-      </div>
     </div>
 
-    <!-- ГРАФИК МАЯ — 20 дней -->
+    <!-- ГРАФИК МАЯ — 21 день -->
     <div class="card">
       <h2>📈 Выручка · Май 2026</h2>
       <div class="chart-legend">
         <span><span class="dot" style="background:#60a5fa"></span>выручка нетто (за день, ₽)</span>
       </div>
 
-      <svg viewBox="0 0 400 160" width="100%" preserveAspectRatio="none" style="display:block">
-        <line x1="0" y1="40" x2="400" y2="40" stroke="#22304d" stroke-width="0.5" stroke-dasharray="2,3"/>
-        <line x1="0" y1="80" x2="400" y2="80" stroke="#22304d" stroke-width="0.5" stroke-dasharray="2,3"/>
-        <line x1="0" y1="120" x2="400" y2="120" stroke="#22304d" stroke-width="0.5" stroke-dasharray="2,3"/>
+      <svg viewBox="0 0 420 160" width="100%" preserveAspectRatio="none" style="display:block">
+        <line x1="0" y1="40" x2="420" y2="40" stroke="#22304d" stroke-width="0.5" stroke-dasharray="2,3"/>
+        <line x1="0" y1="80" x2="420" y2="80" stroke="#22304d" stroke-width="0.5" stroke-dasharray="2,3"/>
+        <line x1="0" y1="120" x2="420" y2="120" stroke="#22304d" stroke-width="0.5" stroke-dasharray="2,3"/>
 
-        <!-- 20 столбиков. Шаг 20, ширина 9 -->
+        <!-- 21 столбик. Шаг 20, ширина 9 -->
         <rect x="3"   y="82"  width="9" height="38" fill="#60a5fa" rx="1"/>
         <rect x="23"  y="64"  width="9" height="56" fill="#60a5fa" rx="1"/>
         <rect x="43"  y="45"  width="9" height="75" fill="#60a5fa" rx="1"/>
@@ -712,41 +694,44 @@
         <rect x="323" y="59"  width="9" height="61" fill="#60a5fa" rx="1"/>
         <rect x="343" y="6"   width="9" height="114" fill="#60a5fa" rx="1"/>
         <rect x="363" y="31"  width="9" height="89" fill="#60a5fa" rx="1"/>
-        <!-- 20.05 — 149 216 — выделен сегодня -->
-        <rect x="383" y="30"  width="9" height="90" fill="#a78bfa" rx="1"/>
+        <rect x="383" y="30"  width="9" height="90" fill="#60a5fa" rx="1"/>
+        <!-- 21.05 — 249 740 — рекорд, фиолетовый -->
+        <rect x="403" y="-30" width="9" height="150" fill="#a78bfa" rx="1"/>
+        <!-- Звёздочка над рекордом -->
+        <text x="408" y="-2" font-size="10" fill="#a78bfa" text-anchor="middle">★</text>
 
         <text x="7"   y="155" font-size="8" fill="#9aa7bd" text-anchor="middle">01</text>
         <text x="87"  y="155" font-size="8" fill="#9aa7bd" text-anchor="middle">05</text>
         <text x="167" y="155" font-size="8" fill="#9aa7bd" text-anchor="middle">09</text>
         <text x="247" y="155" font-size="8" fill="#9aa7bd" text-anchor="middle">13</text>
         <text x="327" y="155" font-size="8" fill="#9aa7bd" text-anchor="middle">17</text>
-        <text x="387" y="155" font-size="8" fill="#a78bfa" text-anchor="middle" font-weight="bold">20</text>
+        <text x="407" y="155" font-size="8" fill="#a78bfa" text-anchor="middle" font-weight="bold">21</text>
       </svg>
 
       <div class="chart-totals">
         <div class="cell">
-          <div class="l">Выручка за 20 дней</div>
-          <div class="v">2 734 003<span class="cur"> ₽</span></div>
+          <div class="l">Выручка за 21 день</div>
+          <div class="v">2 983 743<span class="cur"> ₽</span></div>
         </div>
         <div class="cell">
           <div class="l">Средн. за рабочий день</div>
-          <div class="v">136 700<span class="cur"> ₽</span></div>
+          <div class="v">142 083<span class="cur"> ₽</span></div>
         </div>
         <div class="cell">
-          <div class="l">Прибыль за 20 дней</div>
-          <div class="v" style="color:var(--green)">~1 880 К<span class="cur"> ₽</span></div>
+          <div class="l">Прогноз май (полный)</div>
+          <div class="v" style="color:var(--green)">~4,4 М<span class="cur"> ₽</span></div>
         </div>
         <div class="cell">
           <div class="l">Средняя маржа</div>
-          <div class="v">~66%</div>
+          <div class="v">~67%</div>
         </div>
       </div>
 
-      <div class="sub-line" style="margin-top:10px">текущий темп даёт ~4,1 М/мес выручки и ~2,8 М прибыли</div>
+      <div class="sub-line" style="margin-top:10px">★ 21.05 — рекорд месяца 250К. Двигают ОКТ (24 шт) и продажи очков (5 пар)</div>
     </div>
   </div>
 
-  <div class="footer">Doctor Optic · 20.05.2026 · Дашборд v1.5</div>
+  <div class="footer">Doctor Optic · 21.05.2026 · Дашборд v1.6</div>
 </div>
 
 <script>
@@ -759,29 +744,6 @@
     document.getElementById(panes[b.dataset.tab]).classList.add('on');
     window.scrollTo({top:0, behavior:'smooth'});
   }));
-
-  let pin = '';
-  function addPin(digit) {
-    if (pin.length < 4) {
-      pin += digit;
-      document.getElementById('pinDisplay').textContent = '●'.repeat(pin.length);
-    }
-  }
-  function delPin() {
-    pin = pin.slice(0, -1);
-    document.getElementById('pinDisplay').textContent = pin.length ? '●'.repeat(pin.length) : '····';
-  }
-  function checkPin() {
-    if (pin === '1406') {
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('appContent').style.display = 'block';
-    } else {
-      document.getElementById('loginError').textContent = 'Неправильный пароль';
-      pin = '';
-      document.getElementById('pinDisplay').textContent = '····';
-      setTimeout(() => document.getElementById('loginError').textContent = '', 2000);
-    }
-  }
 </script>
 </body>
 </html>
